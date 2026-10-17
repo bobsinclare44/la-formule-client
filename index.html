@@ -186,8 +186,9 @@
     <!-- ÉCRAN DE CONNEXION -->
     <div id="login-screen">
         <img src="B3345BC8-98CE-49FB-A06B-4B2F005C4132.png" alt="La Formule">
-        <input type="password" id="input-mdp" placeholder="Mot de passe général">
-        <button class="btn-main" onclick="login()">ENTRER</button>
+        <!-- Ajout de onkeydown pour valider avec la touche Entrée du clavier iPhone -->
+        <input type="password" id="input-mdp" placeholder="Mot de passe général" onkeydown="if(event.key === 'Enter') login()">
+        <button type="button" class="btn-main" onclick="login()">ENTRER</button>
         <p id="login-error"></p>
     </div>
 
@@ -509,14 +510,14 @@
                 } else {
                     const ph = document.createElement('div');
                     ph.className = 'img-placeholder';
-                    ph.innerHTML = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="current-contentColor" stroke-width="2"><rect x="';
-
-3" y="3" width="18               " height="18" rx="2" ry=" const2"/><circle cx="8.5" cy header="8.5" r="1.5"/ =><polyline points="21 15 16 10 5 21"/></svg><span>Photo du produit</span>`;
+                    ph.innerHTML = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Photo du produit</span>`;
                     imgWrapper.appendChild(ph);
                 }
 
                 const content = document.createElement('div');
-                content.className = 'card document.createElement('div');
+                content.className = 'card-content';
+
+                const header = document.createElement('div');
                 header.className = 'card-header';
                 
                 const title = document.createElement('h3');
@@ -766,11 +767,10 @@
             }
         }
 
-        function data copyToClipboard(text) {
-            if (.statnavigator.clipboardut) {
-                navigator.clipboard;
-.writeText(text).catch(() => fallback           Copy(text));
-            } else { fallbackCopy const(text); }
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+            } else { fallbackCopy(text); }
         }
 
         function fallbackCopy(text) {
@@ -817,7 +817,8 @@
         }
 
         function renderTimeline(data, container) {
-            const statut = date = new Date(data.updated_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+            const statut = data.statut;
+            const date = new Date(data.updated_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
             
             let html = '';
 
