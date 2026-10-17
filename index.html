@@ -186,7 +186,6 @@
     <!-- ÉCRAN DE CONNEXION -->
     <div id="login-screen">
         <img src="B3345BC8-98CE-49FB-A06B-4B2F005C4132.png" alt="La Formule">
-        <!-- Ajout de onkeydown pour valider avec la touche Entrée du clavier iPhone -->
         <input type="password" id="input-mdp" placeholder="Mot de passe général" onkeydown="if(event.key === 'Enter') login()">
         <button type="button" class="btn-main" onclick="login()">ENTRER</button>
         <p id="login-error"></p>
@@ -397,7 +396,6 @@
             
             updateVipUi();
             fetchProducts();
-            updateCartUI();
             switchView('accueil');
         }
 
@@ -465,20 +463,39 @@
                 });
                 if (!res.ok) throw new Error("Erreur réseau");
                 const data = await res.json();
-                if (data && data.length > 0) state.products = data;
-                else throw new Error("Aucun produit");
+                
+                if (data && data.length > 0) {
+                    state.products = data;
+                } else {
+                    // Fallback si la base est vide, pour ne pas avoir un écran vide
+                    state.products = [
+                        { id: "1", nom: "Miel du Yémen 250 g", description: "Pot en verre, récolte 2026", prix: 35.00, prix_vip: 30.00, reserve_vip: false, photo_url: "", video_url: null },
+                        { id: "2", nom: "Miel du Yémen 500 g", description: "Le grand format pour les familles.", prix: 62.00, prix_vip: 55.00, reserve_vip: true, photo_url: "", video_url: "" }
+                    ];
+                }
             } catch (err) {
+                console.warn("Erreur chargement, utilisation des produits de test.");
                 state.products = [
                     { id: "1", nom: "Miel du Yémen 250 g", description: "Pot en verre, récolte 2026", prix: 35.00, prix_vip: 30.00, reserve_vip: false, photo_url: "", video_url: null },
                     { id: "2", nom: "Miel du Yémen 500 g", description: "Le grand format pour les familles.", prix: 62.00, prix_vip: 55.00, reserve_vip: true, photo_url: "", video_url: "" }
                 ];
             }
+            
+            // Nettoyage du panier : on enlève les articles qui n'existent plus dans les produits
+            state.cart = state.cart.filter(item => state.products.some(p => p.id === item.id));
+            saveCart(); // Met à jour le badge et l'affichage
+            
             renderProducts();
         }
 
         function renderProducts() {
             const container = document.getElementById('product-list');
             container.innerHTML = ''; 
+
+            if (state.products.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:var(--text-sec); margin-top:20px;">Aucun produit disponible pour le moment.</p>';
+                return;
+            }
 
             state.products.forEach(p => {
                 state.qtyStates[p.id] = 1; 
@@ -543,7 +560,7 @@
                     priceVip.className = 'price-vip';
                     priceVip.innerHTML = `<span class="price-vip-label">Prix VIP</span> ${p.prix_vip.toFixed(2).replace('.', ',')} €`;
                     if (!isVipActive) {
-                        priceVip.style.opacity = '0.7'; // Visible mais un peu estompé si pas VIP
+                        priceVip.style.opacity = '0.7';
                     }
                     priceContainer.appendChild(priceVip);
                 }
@@ -652,7 +669,6 @@
                 const p = state.products.find(x => x.id === item.id);
                 if (!p) return;
                 
-                // Si VIP et que le prix VIP existe, on applique. Sinon prix normal.
                 const isVipActive = state.cleVip && p.prix_vip !== null;
                 const price = isVipActive ? p.prix_vip : p.prix;
                 const lineTotal = price * item.qty;
