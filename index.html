@@ -174,7 +174,6 @@
 
     <!-- ÉCRAN DE CONNEXION -->
     <div id="login-screen">
-        <!-- Nom exact de ton fichier logo -->
         <img src="B3345BC8-98CE-49FB-A06B-4B2F005C4132.png" alt="La Formule">
         <div class="input-group visible">
             <input type="password" id="input-mdp" placeholder="Mot de passe">
@@ -306,7 +305,7 @@
         };
 
         let state = {
-            mdp: '', // On force la reconnexion
+            mdp: '', 
             cleVip: sessionStorage.getItem('lf_vip') || null,
             products: [],
             cart: JSON.parse(localStorage.getItem('lf_cart')) || [],
@@ -343,7 +342,7 @@
                 if (data === true) {
                     state.mdp = pwd;
                     if (vip) {
-                        state.cleVip = vip; // Simplifié pour l'instant
+                        state.cleVip = vip; 
                         sessionStorage.setItem('lf_vip', vip);
                     }
                     initApp();
@@ -395,7 +394,7 @@
                 if (data && data.length > 0) state.products = data;
                 else throw new Error("Aucun produit");
             } catch (err) {
-                // Fallback de secours
+                // Fallback de secours (si la BDD est vide ou Supabase inaccessible)
                 state.products = [
                     { id: "1", nom: "Miel du Yémen 250 g", description: "Pot en verre, récolte 2026", prix: 35.00, prix_vip: null, reserve_vip: false, photo_url: "", video_url: null },
                     { id: "2", nom: "Miel du Yémen 500 g", description: "Le grand format pour les familles.", prix: 62.00, prix_vip: 55.00, reserve_vip: true, photo_url: "", video_url: "" }
@@ -606,76 +605,70 @@
             btn.disabled = true;
 
             const payloadLignes = state.cart.map(item => ({ id: item.id, qte: item.qty }));
-            let numeroCommande = null;
-            let totalCommande = 0;
-
-            if (CONFIG.DEMO) {
-                await new Promise(r => setTimeout(r, 500));
-                numeroCommande = Math.floor(Math.random() * 900) + 100;
-                totalCommande = state.cart.reduce((sum, item) => {
-                    const p = state.products.find(x => x.id === item.id);
-                    const price = (state.cleVip && p.prix_vip) ? p.prix_vip : p.prix;
-                    return sum + (price * item.qty);
-                }, 0);
-            } else {
-                // Code pour le vrai serveur
-                try {
-                    const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/creer_commande`, {
-                        method: 'POST', headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ p_mdp: state.mdp, p_cle: state.cleVip, p_lignes: payloadLignes })
-                    });
-                    const data = await res.json();
-                    if (data && data.numero) {
-                        numeroCommande = data.numero;
-                        totalCommande = data.total;
-                    } else { throw new Error("Erreur serveur"); }
-                } catch(e) {
-                    alert("Connexion impossible.");
-                    btn.textContent = 'Envoyer ma commande';
-                    btn.disabled = false;
-                    return;
-                }
-            }
-
-            if (numeroCommande) {
-                let msg = `Bonjour, ma commande n°${numeroCommande} :\n`;
-                state.cart.forEach(item => {
-                    const p = state.products.find(x => x.id === item.id);
-                    const price = (state.cleVip && p.prix_vip) ? p.prix_vip : p.prix;
-                    msg += `• ${item.qty} × ${p.nom} — ${(price * item.qty).toFixed(2).replace('.', ',')} €\n`;
+            
+            try {
+                const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/creer_commande`, {
+                    method: 'POST', 
+                    headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_mdp: state.mdp, p_cle: state.cleVip, p_lignes: payloadLignes })
                 });
-                msg += `Total : ${totalCommande.toFixed(2).replace('.', ',')} €\n\n`;
-                msg += `Mon adresse : (à compléter)\nMon numéro : (à compléter)`;
+                
+                const data = await res.json();
+                
+                if (!res.ok) {
+                    alert("Erreur Supabase : " + (data.message || "Erreur inconnue"));
+                    throw new Error(data.message);
+                }
+                
+                if (data && data.numero) {
+                    const numeroCommande = data.numero;
+                    const totalCommande = data.total;
 
-                copyToClipboard(msg);
-                state.cart = [];
-                saveCart();
+                    let msg = `Bonjour, ma commande n°${numeroCommande} :\n`;
+                    state.cart.forEach(item => {
+                        const p = state.products.find(x => x.id === item.id);
+                        const price = (state.cleVip && p.prix_vip) ? p.prix_vip : p.prix;
+                        msg += `• ${item.qty} × ${p.nom} — ${(price * item.qty).toFixed(2).replace('.', ',')} €\n`;
+                    });
+                    msg += `Total : ${totalCommande.toFixed(2).replace('.', ',')} €\n\n`;
+                    msg += `Mon adresse : (à compléter)\nMon numéro : (à compléter)`;
 
-                const container = document.getElementById('cart-container');
-                container.innerHTML = `
-                    <div style="text-align:center; padding: 30px 20px;">
-                        <h2 style="color:var(--cyan); font-size: 28px; margin-bottom: 10px;">Commande n° ${numeroCommande}</h2>
-                        <p style="font-size: 18px; margin-bottom: 30px;">Total : ${totalCommande.toFixed(2).replace('.', ',')} €</p>
-                        <p style="color:var(--text-sec); margin-bottom: 20px;">Envoie le message pour finaliser ta commande.</p>
-                        
-                        <div style="display:flex; flex-direction:column; gap:10px; max-width:300px; margin:0 auto;">
-                            <a href="https://wa.me/${CONTACTS.whatsapp}?text=${encodeURIComponent(msg)}" class="btn-main" style="text-decoration:none; display:block; line-height:1.2; background:#25D366; color:black;">WhatsApp</a>
-                            <a href="https://t.me/${CONTACTS.telegram}?text=${encodeURIComponent(msg)}" class="btn-main" style="text-decoration:none; display:block; line-height:1.2; background:#0088cc; color:white;">Telegram</a>
-                            <a href="https://signal.me/#p/${CONTACTS.signal}" class="btn-main" style="text-decoration:none; display:block; line-height:1.2; background:#3a76f0; color:white;" target="_blank">Signal</a>
-                            <p style="font-size:12px; color:#888; margin-top:10px;">Message copié. Colle-le dans Signal.</p>
-                        </div>
-                        
-                        <div style="margin-top: 40px; text-align: left;" class="card-suivi">
-                            <h3>Suivre ma commande</h3>
-                            <div class="suivi-input-row">
-                                <input type="number" id="tracking-numero-conf" value="${numeroCommande}">
-                                <button onclick="trackOrder(true)">Suivre</button>
+                    copyToClipboard(msg);
+                    state.cart = [];
+                    saveCart();
+
+                    const container = document.getElementById('cart-container');
+                    container.innerHTML = `
+                        <div style="text-align:center; padding: 30px 20px;">
+                            <h2 style="color:var(--cyan); font-size: 28px; margin-bottom: 10px;">Commande n° ${numeroCommande}</h2>
+                            <p style="font-size: 18px; margin-bottom: 30px;">Total : ${totalCommande.toFixed(2).replace('.', ',')} €</p>
+                            <p style="color:var(--text-sec); margin-bottom: 20px;">Envoie le message pour finaliser ta commande.</p>
+                            
+                            <div style="display:flex; flex-direction:column; gap:10px; max-width:300px; margin:0 auto;">
+                                <a href="https://wa.me/${CONTACTS.whatsapp}?text=${encodeURIComponent(msg)}" class="btn-main" style="text-decoration:none; display:block; line-height:1.2; background:#25D366; color:black;">WhatsApp</a>
+                                <a href="https://t.me/${CONTACTS.telegram}?text=${encodeURIComponent(msg)}" class="btn-main" style="text-decoration:none; display:block; line-height:1.2; background:#0088cc; color:white;">Telegram</a>
+                                <a href="https://signal.me/#p/${CONTACTS.signal}" class="btn-main" style="text-decoration:none; display:block; line-height:1.2; background:#3a76f0; color:white;" target="_blank">Signal</a>
+                                <p style="font-size:12px; color:#888; margin-top:10px;">Message copié. Colle-le dans Signal.</p>
                             </div>
-                            <div id="tracking-result-conf" style="margin-top: 15px;"></div>
+                            
+                            <div style="margin-top: 40px; text-align: left;" class="card-suivi">
+                                <h3>Suivre ma commande</h3>
+                                <div class="suivi-input-row">
+                                    <input type="number" id="tracking-numero-conf" value="${numeroCommande}">
+                                    <button onclick="trackOrder(true)">Suivre</button>
+                                </div>
+                                <div id="tracking-result-conf" style="margin-top: 15px;"></div>
+                            </div>
                         </div>
-                    </div>
-                `;
-                trackOrder(true);
+                    `;
+                    trackOrder(true);
+                } else {
+                    alert("Erreur : le serveur n'a pas renvoyé de numéro de commande.");
+                }
+            } catch(e) {
+                console.error(e);
+                btn.textContent = 'Envoyer ma commande';
+                btn.disabled = false;
             }
         }
 
@@ -706,23 +699,16 @@
 
             let data = null;
 
-            if (CONFIG.DEMO) {
-                await new Promise(r => setTimeout(r, 500));
-                const secs = Math.floor(Date.now() / 1000);
-                const etapes = ['recue', 'validee', 'en_preparation', 'en_route', 'livree'];
-                const index = (secs % etapes.length);
-                data = { statut: etapes[index], updated_at: new Date().toISOString() };
-            } else {
-                try {
-                    const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/suivre_commande`, {
-                        method: 'POST', headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ p_numero: parseInt(num) })
-                    });
-                    data = await res.json();
-                } catch(e) {
-                    resDiv.innerHTML = '<p style="color:var(--red);">Connexion impossible.</p>';
-                    return;
-                }
+            try {
+                const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/suivre_commande`, {
+                    method: 'POST', 
+                    headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_numero: parseInt(num) })
+                });
+                data = await res.json();
+            } catch(e) {
+                resDiv.innerHTML = '<p style="color:var(--red);">Connexion impossible.</p>';
+                return;
             }
 
             if (!data || data.erreur) {
