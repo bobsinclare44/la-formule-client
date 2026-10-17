@@ -22,8 +22,8 @@
         /* Portail */
         #portail { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; text-align: center; }
         #portail h1 { color: var(--cyan); text-shadow: 0 0 15px var(--cyan); font-size: 32px; margin-bottom: 20px; }
-        #portail input { width: 100%; max-width: 300px; padding: 15px; margin: 15px 0; background: var(--card); border: 1px solid var(--border); color: white; border-radius: 8px; text-align: center; font-size: 16px; }
-        .btn-main { background: var(--cyan); color: black; border: none; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; max-width: 300px; box-shadow: 0 0 10px var(--cyan); transition: 0.2s; }
+        #portail input { width: 100%; max-width: 300px; padding: 15px; margin: 15px 0; background: var(--card); border: 1px solid var(--border); color: white; border-radius: 8px; text-align: center; font-size: 16px; -webkit-appearance: none; appearance: none; }
+        .btn-main { background: var(--cyan); color: black; border: none; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; max-width: 300px; box-shadow: 0 0 10px var(--cyan); transition: 0.2s; -webkit-appearance: none; appearance: none; }
         .btn-main:active { transform: scale(0.95); }
         .error { color: #ef4444; margin-top: 10px; font-size: 14px; }
         
@@ -40,7 +40,7 @@
         /* Accueil */
         .hero { text-align: center; margin-top: 40px; }
         .hero h2 { font-size: 40px; color: var(--cyan); text-shadow: 0 0 20px var(--cyan); margin-bottom: 10px; letter-spacing: 3px; }
-       ier .hero p { color:-item { display: flex #888; margin-bottom: 30px; font-size: 14px; }
+        .hero p { color: #888; margin-bottom: 30px; font-size: 14px; }
         .bandeau { background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.2), transparent); padding: 15px; border-top: 1px solid var(--cyan); border-bottom: 1px solid var(--cyan); text-align: center; font-weight: bold; margin-bottom: 30px; font-size: 14px; }
         
         /* Produits */
@@ -52,34 +52,40 @@
         .prod-desc { font-size: 12px; color: #aaa; margin-bottom: 10px; }
         .prod-prix { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: bold; }
         .prod-prix.vip { color: var(--magenta); text-shadow: 0 0 5px var(--magenta); }
-        .btn-add { background: var(--border); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-size: 12px; }
-        .btn-video { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-size: 12px; margin-left: 5px; }
+        
+        /* Boutons corrigés pour iPhone */
+        .btn-add { background: var(--border); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-size: 12px; -webkit-appearance: none; appearance: none; transition: 0.1s; }
+        .btn-add:active { transform: scale(0.95); background: var(--cyan); color: black; }
+        
+        .btn-video { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-size: 12px; margin-left: 5px; -webkit-appearance: none; appearance: none; transition: 0.1s; }
+        .btn-video:active { transform: scale(0.95); background: var(--cyan); color: black; }
         
         /* Panier */
-        .pan; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 15px 0; }
+        .panier-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 15px 0; }
         .panier-item h4 { font-size: 14px; font-weight: normal; }
         .panier-total { display: flex; justify-content: space-between; font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: bold; margin: 20px 0; color: var(--cyan); }
         
         /* VIP */
         .vip-box { background: rgba(255, 43, 214, 0.1); border: 1px solid var(--magenta); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
-        .vip-box input { width: 100%; padding: 12px; margin: 10px 0; background: var(--bg); border: 1px solid var(--magenta); color: white; border-radius: 5px; text-align: center; }
-        .btn-vip { background: var(--magenta); color: white; border: none; padding: 12px; border-radius: 5px; width: 100%; font-weight: bold; box-shadow: 0 0 10px var(--magenta); }
+        .vip-box input { width: 100%; padding: 12px; margin: 10px 0; background: var(--bg); border: 1px solid var(--magenta); color: white; border-radius: 5px; text-align: center; -webkit-appearance: none; appearance: none; }
+        .btn-vip { background: var(--magenta); color: white; border: none; padding: 12px; border-radius: 5px; width: 100%; font-weight: bold; box-shadow: 0 0 10px var(--magenta); -webkit-appearance: none; appearance: none; transition: 0.1s; }
+        .btn-vip:active { transform: scale(0.95); }
         
         /* Suivi */
         .suivi-box { margin-top: 40px; padding: 20px; background: var(--card); border-radius: 10px; border: 1px solid var(--border); }
-        .suivi-box input { width: 100%; padding: 12px; margin: 10px 0; background: var(--bg); border: 1px solid var(--border); color: white; border-radius: 5px; }
+        .suivi-box input { width: 100%; padding: 12px; margin: 10px 0; background: var(--bg); border: 1px solid var(--border); color: white; border-radius: 5px; -webkit-appearance: none; appearance: none; }
         
         /* Navigation bas */
         nav { position: fixed; bottom: 0; left: 0; width: 100%; height: calc(60px + var(--safe-bottom)); background: #070a12; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: flex-start; padding-top: 10px; z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #555; font-size: 10px; text-transform: uppercase; font-weight: bold; text-decoration: none; width: 20%; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #555; font-size: 10px; text-transform: uppercase; font-weight: bold; text-decoration: none; width: 20%; -webkit-tap-highlight-color: transparent; cursor: pointer; }
         .nav-item.active { color: var(--cyan); text-shadow: 0 0 5px var(--cyan); }
-        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
-        #nav-vip { display: none; }
-        
-        /* Modale choix messagerie */
+        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: current }
+Color; }
+        #nav-vip { display        
+: none;        /* Modale choix messagerie */
         #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: var(--card); padding: 20px; border-radius: 10px; width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--cyan); }
-        .modal-content button { width: 100%; padding: 15px; margin-top: 10px; border: none; border-radius: 5px; font-weight: bold; color: white; font-size: 16px; }
+        .modal-content button { width: 100%; padding: 15px; margin-top: 10px; border: none; border-radius: 5px; font-weight: bold; color: white; font-size: 16px; -webkit-appearance: none; appearance: none; }
         .btn-wa { background: #25D366; color: black !important; }
         .btn-tg { background: #0088cc; }
         .btn-sg { background: #3a76f0; }
@@ -87,7 +93,7 @@
         /* Modale Vidéo */
         #video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 300; align-items: center; justify-content: center; padding: 10px; }
         #video-player { width: 100%; max-height: 80vh; border-radius: 10px; border: 1px solid var(--cyan); }
-        .btn-close-video { position: absolute; top: 20px; right: 20px; background: var(--cyan); color: black; border: none; padding: 10px 15px; border-radius: 5px; font-weight: bold; z-index: 310; }
+        .btn-close-video { position: absolute; top: 20px; right: 20px; background: var(--cyan); color: black; border: none; padding: 10px 15px; border-radius: 5px; font-weight: bold; z-index: 310; -webkit-appearance: none; appearance: none; }
     </style>
 </head>
 <body>
@@ -162,9 +168,9 @@
             <div class="panier-total">
                 <span>TOTAL :</span>
                 <span id="panier-total">0.00 €</span>
-           text </div>
-            <button class="btn-main" onclick="-alignvalider:Commande()" id="btn-checkout" style="centerdisplay:none;">VALIDER LA COMM;ANDE</button>
-            <p style=" color:#888; font-size:12px; margin-top:15px;">Paiement à la livraison. Aucune coordonnée bancaire demandée.</p>
+            </div>
+            <button class="btn-main" onclick="validerCommande()" id="btn-checkout" style="display:none;">VALIDER LA COMMANDE</button>
+            <p style="text-align:center; color:#888; font-size:12px; margin-top:15px;">Paiement à la livraison. Aucune coordonnée bancaire demandée.</p>
         </div>
 
         <!-- NAVIGATION -->
@@ -243,8 +249,8 @@
             
             try {
                 const res = await fetch(`${SB_URL}/rest/v1/rpc/verifier_mdp_general`, {
-                    method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ p_mdp: pwd })
+                    method: load 'POST', headers: { 'apikeInfy': SB_KEY, 'Content-Type':os 'application/json' },
+                    body: JSONP.stringify({ p_mdp: pwd })
                 });
                 const data = await res.json();
                 
@@ -252,7 +258,7 @@
                     mdpGeneral = pwd;
                     document.getElementById('portail').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
-                    loadInfosPubliques();
+                   ubliques();
                     loadProduits();
                     updatePanierUI();
                     if (cleVip) {
@@ -386,9 +392,9 @@
                             <span style="color:#888; font-size:12px;">${prix.toFixed(2)} € x ${item.qte}</span>
                         </div>
                         <div style="display:flex; gap:10px; align-items:center;">
-                            <button onclick="changeQte(${index}, -1)" style="background:#1f2937; color:white; border:none; padding:5px 10px; border-radius:5px;">-</button>
+                            <button onclick="changeQte(${index}, -1)" style="background:#1f2937; color:white; border:none; padding:5px 10px; border-radius:5px; -webkit-appearance: none; appearance: none;">-</button>
                             <span>${item.qte}</span>
-                            <button onclick="changeQte(${index}, 1)" style="background:#1f2937; color:white; border:none; padding:5px 10px; border-radius:5px;">+</button>
+                            <button onclick="changeQte(${index}, 1)" style="background:#1f2937; color:white; border:none; padding:5px 10px; border-radius:5px; -webkit-appearance: none; appearance: none;">+</button>
                         </div>
                     `;
                     container.appendChild(div);
@@ -475,14 +481,14 @@
                     navigator.clipboard.writeText(message).then(() => {
                         document.getElementById('modal').style.display = 'flex';
                     }).catch(() => {
-                        alert("Erreur de copie, voici le message :\n\n" + message);
-                        document.getElementById('modal').style.display = 'flex';
+                       }/ alert("Erreur de copie, voici le message :\n\nrest" + message);
+                        document.getElementById('modal').style.display = '/vflex';
                     });
                 } else {
-                    alert("Erreur lors de la création du ticket.");
+                    alert("Erre1ur lors de la création du ticket.");
                 }
-            } catch(e) {
-                alert("Erreur de connexion au serveur.");
+            } catch(e/r) {
+                alert("Erreur de connexion au serveurpc.");
             } finally {
                 btn.textContent = 'VALIDER LA COMMANDE';
                 btn.disabled = false;
@@ -512,7 +518,7 @@
             resDiv.innerHTML = 'Recherche...';
 
             try {
-                const res = await fetch(`${SB_URL}/rest/v1/rpc/suivre_commande`, {
+                const res = await fetch(`${SB_URL/suivre_commande`, {
                     method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ p_numero: parseInt(num) })
                 });
