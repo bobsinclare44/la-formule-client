@@ -1,1 +1,509 @@
-<h1>Test<\h1>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>La Formule</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #070a12;
+            --cyan: #00f0ff;
+            --magenta: #ff2bd6;
+            --text: #e0e0e0;
+            --card: #111827;
+            --border: #1f2937;
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); font-family: 'Exo 2', sans-serif; padding-bottom: calc(70px + var(--safe-bottom)); overflow-x: hidden; }
+        h1, h2, h3, .btn-main { font-family: 'Orbitron', sans-serif; }
+        
+        /* Portail */
+        #portail { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; text-align: center; }
+        #portail h1 { color: var(--cyan); text-shadow: 0 0 15px var(--cyan); font-size: 32px; margin-bottom: 20px; }
+        #portail input { width: 100%; max-width: 300px; padding: 15px; margin: 15px 0; background: var(--card); border: 1px solid var(--border); color: white; border-radius: 8px; text-align: center; font-size: 16px; }
+        .btn-main { background: var(--cyan); color: black; border: none; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; max-width: 300px; box-shadow: 0 0 10px var(--cyan); transition: 0.2s; }
+        .btn-main:active { transform: scale(0.95); }
+        .error { color: #ef4444; margin-top: 10px; font-size: 14px; }
+        
+        /* App */
+        #app { display: none; }
+        header { padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
+        header h1 { color: var(--cyan); font-size: 24px; letter-spacing: 2px; text-shadow: 0 0 8px var(--cyan); }
+        
+        /* Pages */
+        .page { display: none; padding: 20px; animation: fadeIn 0.3s; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Accueil */
+        .hero { text-align: center; margin-top: 40px; }
+        .hero h2 { font-size: 40px; color: var(--cyan); text-shadow: 0 0 20px var(--cyan); margin-bottom: 10px; letter-spacing: 3px; }
+        .hero p { color: #888; margin-bottom: 30px; font-size: 14px; }
+        .bandeau { background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.2), transparent); padding: 15px; border-top: 1px solid var(--cyan); border-bottom: 1px solid var(--cyan); text-align: center; font-weight: bold; margin-bottom: 30px; font-size: 14px; }
+        
+        /* Produits */
+        .grid-produits { display: flex; flex-direction: column; gap: 15px; }
+        .card-produit { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 15px; display: flex; gap: 15px; }
+        .card-produit img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; background: #000; }
+        .prod-info { flex: 1; }
+        .prod-nom { font-weight: bold; color: var(--cyan); font-size: 16px; margin-bottom: 5px; }
+        .prod-desc { font-size: 12px; color: #aaa; margin-bottom: 10px; }
+        .prod-prix { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: bold; }
+        .prod-prix.vip { color: var(--magenta); text-shadow: 0 0 5px var(--magenta); }
+        .btn-add { background: var(--border); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-size: 12px; }
+        
+        /* Panier */
+        .panier-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 15px 0; }
+        .panier-item h4 { font-size: 14px; font-weight: normal; }
+        .panier-total { display: flex; justify-content: space-between; font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: bold; margin: 20px 0; color: var(--cyan); }
+        
+        /* VIP */
+        .vip-box { background: rgba(255, 43, 214, 0.1); border: 1px solid var(--magenta); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
+        .vip-box input { width: 100%; padding: 12px; margin: 10px 0; background: var(--bg); border: 1px solid var(--magenta); color: white; border-radius: 5px; text-align: center; }
+        .btn-vip { background: var(--magenta); color: white; border: none; padding: 12px; border-radius: 5px; width: 100%; font-weight: bold; box-shadow: 0 0 10px var(--magenta); }
+        
+        /* Suivi */
+        .suivi-box { margin-top: 40px; padding: 20px; background: var(--card); border-radius: 10px; border: 1px solid var(--border); }
+        .suivi-box input { width: 100%; padding: 12px; margin: 10px 0; background: var(--bg); border: 1px solid var(--border); color: white; border-radius: 5px; }
+        
+        /* Navigation bas */
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; height: calc(60px + var(--safe-bottom)); background: #070a12; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: flex-start; padding-top: 10px; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #555; font-size: 10px; text-transform: uppercase; font-weight: bold; text-decoration: none; width: 20%; }
+        .nav-item.active { color: var(--cyan); text-shadow: 0 0 5px var(--cyan); }
+        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
+        #nav-vip { display: none; }
+        
+        /* Modale choix messagerie */
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: var(--card); padding: 20px; border-radius: 10px; width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--cyan); }
+        .modal-content button { width: 100%; padding: 15px; margin-top: 10px; border: none; border-radius: 5px; font-weight: bold; color: white; font-size: 16px; }
+        .btn-wa { background: #25D366; color: black !important; }
+        .btn-tg { background: #0088cc; }
+        .btn-sg { background: #3a76f0; }
+    </style>
+</head>
+<body>
+
+    <!-- PORTAIL -->
+    <div id="portail">
+        <h1>LA FORMULE</h1>
+        <p style="color:#888;">Accès privé</p>
+        <input type="password" id="pwd-portail" placeholder="Mot de passe">
+        <button class="btn-main" onclick="entrerSite()">ENTRER</button>
+        <p id="portail-error" class="error"></p>
+    </div>
+
+    <!-- APP -->
+    <div id="app">
+        <header>
+            <h1>LA FORMULE</h1>
+        </header>
+
+        <!-- PAGE ACCUEIL -->
+        <div id="page-accueil" class="page active">
+            <div class="hero">
+                <h2>LA FORMULE</h2>
+                <p>Le meilleur du miel, livré chez vous.</p>
+                <button class="btn-main" onclick="switchPage('menu')">COMMANDER</button>
+            </div>
+            <div class="bandeau" style="margin-top:30px;">
+                🚚 Livraison sur la zone 44300
+            </div>
+            
+            <div class="suivi-box">
+                <h3 style="font-size:16px; margin-bottom:10px;">Suivre ma commande</h3>
+                <input type="number" id="suivi-numero" placeholder="Numéro de ticket (ex: 12)">
+                <button class="btn-main" style="background:var(--border); color:white; box-shadow:none;" onclick="suivreCommande()">Vérifier le statut</button>
+                <div id="suivi-resultat" style="margin-top:15px; font-size:14px;"></div>
+            </div>
+        </div>
+
+        <!-- PAGE MENU -->
+        <div id="page-menu" class="page">
+            <h2 style="margin-bottom:15px; font-size:20px;">Notre Menu</h2>
+            <div id="catalogue" class="grid-produits"></div>
+        </div>
+
+        <!-- PAGE COMPARER -->
+        <div id="page-comparer" class="page">
+            LA <h2 style="margin-bottom: COMM15px; font-size:20px;">ComparANDE</er</h2>
+            <p style="color:#888; font-size:14px; margin-bottom:15px;">Voici un comparatif rapide de nos produits.</p>
+            <div id="comparateur" class="grid-produits"></div>
+        </div>
+
+        <!-- PAGE VIP -->
+        <div id="page-vip" class="page">
+            <h2 style="margin-bottom:15px; font-size:20px;">Avantages VIP</h2>
+            <div id="vip-login" class="vip-box">
+                <p style="font-size:14px; margin-bottom:10px;">Saisissez votre clé d'accès VIP :</p>
+                <input type="text" id="cle-vip-input" placeholder="VIP-XXXXXX">
+                <button class="btn-vip" onclick="verifierVip()">Activer</button>
+                <p id="vip-error" class="error" style="color:var(--magenta);"></p>
+            </div>
+            <div id="vip-content" style="display:none;">
+                <p style="color:var(--magenta); font-weight:bold; margin-bottom:15px;">Statut : Membre VIP Actif</p>
+                <p style="font-size:14px; color:#aaa; margin-bottom:20px;">Profitez de nos prix exclusifs et de nos produits réservés ci-dessous.</p>
+                <div id="catalogue-vip" class="grid-produits"></div>
+            </div>
+        </div>
+
+        <!-- PAGE PANIER -->
+        <div id="page-panier" class="page">
+            <h2 style="margin-bottom:15px; font-size:20px;">Mon Panier</h2>
+            <div id="panier-liste"></div>
+            <div class="panier-total">
+                <span>TOTAL :</span>
+                <span id="panier-total">0.00 €</span>
+            </div>
+            <button class="btn-main" onclick="validerCommande()" id="btn-checkout" style="display:none;">VALIDERbutton>
+            <p style="text-align:center; color:#888; font-size:12px; margin-top:15px;">Paiement à la livraison. Aucune coordonnée bancaire demandée.</p>
+        </div>
+
+        <!-- NAVIGATION -->
+        <nav>
+            <div class="nav-item active" onclick="switchPage('accueil')">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                Accueil
+            </div>
+            <div class="nav-item" onclick="switchPage('menu')">
+                <svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11z"/><circle cx="17.5" cy="17.5" r="4.5"/><path d="M2 13h10v9H2z"/></svg>
+                Menu
+            </div>
+            <div class="nav-item" onclick="switchPage('comparer')">
+                <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+                Comparer
+            </div>
+            <div class="nav-item" id="nav-vip" onclick="switchPage('vip')">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                VIP
+            </div>
+            <div class="nav-item" onclick="switchPage('panier')">
+                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                Panier
+            </div>
+        </nav>
+    </div>
+
+    <!-- MODALE MESSAGERIE -->
+    <div id="modal">
+        <div class="modal-content">
+            <h3 style="color:var(--cyan); margin-bottom:10px;">Ticket créé !</h3>
+            <p style="font-size:14px; color:#aaa; margin-bottom:15px;">Le récapitulatif a été copié. Choisis ta messagerie pour finaliser avec ton adresse et ton numéro :</p>
+            <button class="btn-wa" onclick="envoyerMessage('wa')">WhatsApp</button>
+            <button class="btn-tg" onclick="envoyerMessage('tg')">Telegram</button>
+            <button class="btn-sg" onclick="envoyerMessage('sg')">Signal</button>
+            <button style="background:transparent; color:#888; margin-top:15px; font-size:12px;" onclick="document.getElementById('modal').style.display='none'">Fermer</button>
+        </div>
+    </div>
+
+    <script>
+        const SB_URL = 'https://xwctaegjcknthjwyyolq.supabase.co';
+        const SB_KEY = 'sb_publishable_8orKy9SLqBdGRkvbAhfQeA_xVKujcDl';
+        
+        let mdpGeneral = '';
+        let cleVip = localStorage.getItem('vip_key') || '';
+        let panier = JSON.parse(localStorage.getItem('panier')) || [];
+        let produitsCache = [];
+        let numTicketEnCours = null;
+        let contactVendeur = '';
+
+        // --- INITIALISATION ---
+        async function init() {
+            if (mdpGeneral) {
+                document.getElementById('portail').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                loadInfosPubliques();
+                loadProduits();
+                updatePanierUI();
+                if (cleVip) {
+                    document.getElementById('nav-vip').style.display = 'flex';
+                    verifierCleVip(cleVip, true);
+                }
+            }
+        }
+
+        async function entrerSite() {
+            const pwd = document.getElementById('pwd-portail').value;
+            const err = document.getElementById('portail-error');
+            err.textContent = 'Vérification...';
+            
+            try {
+                const res = await fetch(`${SB_URL}/rest/v1/rpc/verifier_mdp_general`, {
+                    method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_mdp: pwd })
+                });
+                const data = await res.json();
+                
+                if (data === true) {
+                    mdpGeneral = pwd;
+                    document.getElementById('portail').style.display = 'none';
+                    document.getElementById('app').style.display = 'block';
+                    loadInfosPubliques();
+                    loadProduits();
+                    updatePanierUI();
+                    if (cleVip) {
+                        document.getElementById('nav-vip').style.display = 'flex';
+                        verifierCleVip(cleVip, true);
+                    }
+                } else {
+                    err.textContent = 'Mot de passe incorrect.';
+                }
+            } catch(e) {
+                err.textContent = 'Erreur de connexion.';
+            }
+        }
+
+        async function loadInfosPubliques() {
+            const res = await fetch(`${SB_URL}/rest/v1/rpc/infos_publiques`, {
+                method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' }
+            });
+            const data = await res.json();
+            contactVendeur = data.contact;
+            document.querySelector('.bandeau').innerHTML = `🚚 ${data.delai}`;
+        }
+
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(`page-${pageId}`).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // --- PRODUITS ---
+        async function loadProduits() {
+            const res = await fetch(`${SB_URL}/rest/v1/rpc/lister_produits`, {
+                method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ p_mdp: mdpGeneral, p_cle: cleVip || null })
+            });
+            produitsCache = await res.json();
+            renderProduits(produitsCache, 'catalogue');
+            renderProduits(produitsCache, 'comparateur', true);
+            
+            if (cleVip) {
+                renderProduits(produitsCache.filter(p => p.reserve_vip), 'catalogue-vip');
+            }
+        }
+
+        function renderProduits(produits, containerId, isComparer = false) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (produits.length === 0) {
+                container.innerHTML = '<p style="color:#888; text-align:center; margin-top:20px;">Aucun produit disponible.</p>';
+                return;
+            }
+
+            produits.forEach(p => {
+                const isVip = cleVip && p.prix_vip;
+                const prixAff = isVip ? p.prix_vip : p.prix;
+                
+                const div = document.createElement('div');
+                div.className = 'card-produit';
+                div.innerHTML = `
+                    <img src="${p.photo_url || 'https://via.placeholder.com/80'}" alt="${p.nom}">
+                    <div class="prod-info">
+                        <div class="prod-nom">${p.nom} ${p.reserve_vip ? '👑' : ''}</div>
+                        <div class="prod-desc">${p.description || ''}</div>
+                        <div class="prod-prix ${isVip ? 'vip' : ''}">${prixAff.toFixed(2)} €</div>
+                        ${!isComparer ? `<button class="btn-add" onclick="ajouterAuPanier('${p.id}')">Ajouter au panier</button>` : ''}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // --- PANIER ---
+        function ajouterAuPanier(id) {
+            const prod = produitsCache.find(p => p.id === id);
+            if (!prod) return;
+
+            const existing = panier.find(item => item.id === id);
+            if (existing) {
+                existing.qte++;
+            } else {
+                panier.push({ id: id, qte: 1 });
+            }
+            savePanier();
+        }
+
+        function updatePanierUI() {
+            const container = document.getElementById('panier-liste');
+            container.innerHTML = '';
+            let total = 0;
+
+            if (panier.length === 0) {
+                container.innerHTML = '<p style="color:#888; text-align:center; margin-top:20px;">Votre panier est vide.</p>';
+                document.getElementById('btn-checkout').style.display = 'none';
+            } else {
+                document.getElementById('btn-checkout').style.display = 'block';
+                panier.forEach((item, index) => {
+                    const prod = produitsCache.find(p => p.id === item.id);
+                    if (!prod) return;
+
+                    const isVip = cleVip && prod.prix_vip;
+                    const prix = isVip ? prod.prix_vip : prod.prix;
+                    total += prix * item.qte;
+
+                    const div = document.createElement('div');
+                    div.className = 'panier-item';
+                    div.innerHTML = `
+                        <div>
+                            <h4>${prod.nom} ${isVip ? '👑' : ''}</h4>
+                            <span style="color:#888; font-size:12px;">${prix.toFixed(2)} € x ${item.qte}</span>
+                        </div>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <button onclick="changeQte(${index}, -1)" style="background:#1f2937; color:white; border:none; padding:5px 10px; border-radius:5px;">-</button>
+                            <span>${item.qte}</span>
+                            <button onclick="changeQte(${index}, 1)" style="background:#1f2937; color:white; border:none; padding:5px 10px; border-radius:5px;">+</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+            document.getElementById('panier-total').textContent = `${total.toFixed(2)} €`;
+        }
+
+        function changeQte(index, delta) {
+            panier[index].qte += delta;
+            if (panier[index].qte <= 0) panier.splice(index, 1);
+            savePanier();
+        }
+
+        function savePanier() {
+            localStorage.setItem('panier', JSON.stringify(panier));
+            updatePanierUI();
+        }
+
+        // --- VIP ---
+        async function verifierVip() {
+            const cle = document.getElementById('cle-vip-input').value.trim();
+            if (!cle) return;
+            verifierCleVip(cle, false);
+        }
+
+        async function verifierCleVip(cle, isAuto) {
+            const err = document.getElementById('vip-error');
+            if (!isAuto) err.textContent = 'Vérification...';
+            
+            try {
+                const res = await fetch(`${SB_URL}/rest/v1/rpc/verifier_cle_vip`, {
+                    method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_cle: cle })
+                });
+                const data = await res.json();
+                
+                if (data === true) {
+                    cleVip = cle;
+                    localStorage.setItem('vip_key', cleVip);
+                    document.getElementById('vip-login').style.display = 'none';
+                    document.getElementById('vip-content').style.display = 'block';
+                    document.getElementById('nav-vip').style.display = 'flex';
+                    loadProduits(); // Recharger avec prix VIP
+                    updatePanierUI();
+                } else {
+                    if (!isAuto) err.textContent = 'Clé invalide ou expirée.';
+                    if (isAuto) {
+                        localStorage.removeItem('vip_key');
+                        cleVip = '';
+                    }
+                }
+            } catch(e) {
+                if (!isAuto) err.textContent = 'Erreur.';
+            }
+        }
+
+        // --- COMMANDE ---
+        async function validerCommande() {
+            if (panier.length === 0) return;
+            const btn = document.getElementById('btn-checkout');
+            btn.textContent = 'Traitement en cours...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${SB_URL}/rest/v1/rpc/creer_commande`, {
+                    method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_mdp: mdpGeneral, p_cle: cleVip || null, p_panier: panier })
+                });
+                const numero = await res.json();
+                
+                if (numero) {
+                    numTicketEnCours = numero;
+                    panier = [];
+                    savePanier();
+                    
+                    const message = `Bonjour, voici ma commande La Formule :\n\n` +
+                                    `Ticket n° ${numero}\n\n` +
+                                    `⚠️ À COMPLÉTER ICI :\n` +
+                                    `📍 Adresse de livraison : \n` +
+                                    `📞 Numéro de téléphone : \n\n` +
+                                    `Merci !`;
+                    
+                    navigator.clipboard.writeText(message).then(() => {
+                        document.getElementById('modal').style.display = 'flex';
+                    }).catch(() => {
+                        alert("Erreur de copie, voici le message :\n\n" + message);
+                        document.getElementById('modal').style.display = 'flex';
+                    });
+                } else {
+                    alert("Erreur lors de la création du ticket.");
+                }
+            } catch(e) {
+                alert("Erreur de connexion au serveur.");
+            } finally {
+                btn.textContent = 'VALIDER LA COMMANDE';
+                btn.disabled = false;
+            }
+        }
+
+        function envoyerMessage(plateforme) {
+            const msg = encodeURIComponent(`Bonjour, voici ma commande La Formule.\nTicket n° ${numTicketEnCours}\n\n⚠️ À COMPLÉTER ICI :\n📍 Adresse de livraison : \n📞 Numéro de téléphone : `);
+            const tel = contactVendeur.replace(/\+/g, '').replace(/\s/g, '');
+            
+            if (plateforme === 'wa') {
+                window.open(`https://wa.me/${tel}?text=${msg}`, '_blank');
+            } else if (plateforme === 'tg') {
+                window.open(`https://t.me/+${tel}`, '_blank'); // Telegram ne supporte pas le préremplissage direct via URL web pour les numéros
+            } else {
+                window.open(`https://signal.me/#p/+${tel}`, '_blank');
+            }
+            document.getElementById('modal').style.display = 'none';
+            switchPage('accueil');
+        }
+
+        // --- SUIVI ---
+        async function suivreCommande() {
+            const num = document.getElementById('suivi-numero').value;
+            if (!num) return;
+            const resDiv = document.getElementById('suivi-resultat');
+            resDiv.innerHTML = 'Recherche...';
+
+            try {
+                const res = await fetch(`${SB_URL}/rest/v1/rpc/suivre_commande`, {
+                    method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_numero: parseInt(num) })
+                });
+                const data = await res.json();
+                
+                if (data.erreur) {
+                    resDiv.innerHTML = `<span style="color:#ef4444;">${data.erreur}</span>`;
+                } else {
+                    let statutTxt = data.statut.replace('_', ' ').toUpperCase();
+                    let color = data.statut === 'livree' ? '#00f0ff' : (data.statut === 'refusee' || data.statut === 'abandonnee' ? '#ef4444' : 'var(--magenta)');
+                    
+                    resDiv.innerHTML = `
+                        <div style="background:var(--card); padding:15px; border-radius:8px; border-left:4px solid ${color}; text-align:left;">
+                            <p style="font-size:12px; color:#888; margin-bottom:5px;">Ticket #${data.numero}</p>
+                            <h4 style="color:${color}; font-family:'Orbitron';">${statutTxt}</h4>
+                            <p style="font-size:12px; color:#888; margin-top:10px;">${data.delai}</p>
+                        </div>
+                    `;
+                }
+            } catch(e) {
+                resDiv.innerHTML = `<span style="color:#ef4444;">Erreur de connexion.</span>`;
+            }
+        }
+    </script>
+</body>
+</html>
