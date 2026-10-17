@@ -47,6 +47,7 @@
             padding: 20px; text-align: center;
         }
         #login-screen img { width: 230px; margin-bottom: 30px; }
+        #login-screen form { display: flex; flex-direction: column; align-items: center; width: 100%; }
         #login-screen input {
             width: 100%; max-width: 300px; padding: 15px; margin-bottom: 15px; background: var(--card-bg); border: 1px solid var(--card-border);
             color: white; border-radius: 8px; text-align: center; font-size: 16px; -webkit-appearance: none;
@@ -185,8 +186,11 @@
     <!-- ÉCRAN DE CONNEXION -->
     <div id="login-screen">
         <img src="B3345BC8-98CE-49FB-A06B-4B2F005C4132.png" alt="La Formule">
-        <input type="password" id="input-mdp" placeholder="Mot de passe général" onkeydown="if(event.key === 'Enter') login()">
-        <button type="button" class="btn-main" onclick="login()">ENTRER</button>
+        <!-- Correction : utilisation d'un formulaire standard -->
+        <form onsubmit="event.preventDefault(); login();">
+            <input type="password" id="input-mdp" placeholder="Mot de passe général" required>
+            <button type="submit" class="btn-main">ENTRER</button>
+        </form>
         <p id="login-error"></p>
     </div>
 
@@ -305,14 +309,14 @@
     </div>
 
     <!-- Fiche Produit -->
-    <div class="modal-product" id id="modal-product">
-        <div class="card-img="-wrapper" id="product-img-wrapper">
-product            <button class="btn-close"-price style="position:absolute; top:16px" style; right:16px; background:rgba(0,0,0,0.5); color:white; border-radius:50%; z-index:10;" onclick="closeProduct()">×</button>
+    <div class="modal-product" id="modal-product">
+        <div class="card-img-wrapper" id="product-img-wrapper">
+            <button class="btn-close" style="position:absolute; top:16px; right:16px; background:rgba(0,0,0,0.5); color:white; border-radius:50%; z-index:10;" onclick="closeProduct()">×</button>
         </div>
         <div class="product-details">
             <h2 class="card-title" id="product-title" style="font-size: 22px; margin-bottom: 4px;">Nom</h2>
             <div id="product-price-container" style="margin-bottom: 10px;">
-                <span class="price"="font-size: 20px;">0.00 €</span>
+                <span class="price" id="product-price" style="font-size: 20px;">0.00 €</span>
                 <span class="price-vip" id="product-price-vip" style="display:none; font-size: 16px; margin-left: 10px;">0.00 € VIP</span>
             </div>
             <p class="full-desc" id="product-desc">Description complète</p>
@@ -373,7 +377,7 @@ product            <button class="btn-close"-price style="position:absolute; top
                     body: JSON.stringify({ p_mdp: pwd })
                 });
                 
-                if (!res.ok) throw new Error("Erreur HTTP");
+                if (!res.ok) throw new Error("Erreur HTTP " + res.status);
                 const data = await res.json();
                 
                 if (data === true) {
@@ -383,7 +387,7 @@ product            <button class="btn-close"-price style="position:absolute; top
                     err.textContent = 'Accès refusé.';
                 }
             } catch(e) {
-                err.textContent = 'Connexion impossible, réessaie.';
+                err.textContent = 'Connexion impossible (' + e.message + ').';
             }
         }
 
@@ -494,7 +498,6 @@ product            <button class="btn-close"-price style="position:absolute; top
             state.products.forEach(p => {
                 state.qtyStates[p.id] = 1; 
                 
-                // Forcer la conversion en nombre pour éviter les bugs si Supabase renvoie du texte
                 const prixNormalNum = Number(p.prix) || 0;
                 const prixVipNum = (p.prix_vip !== null && p.prix_vip !== undefined) ? Number(p.prix_vip) : null;
                 
@@ -671,13 +674,13 @@ product            <button class="btn-close"-price style="position:absolute; top
                 const prixVipNum = (p.prix_vip !== null && p.prix_vip !== undefined) ? Number(p.prix_vip) : null;
                 
                 const isVipActive = state.cleVip && prixVipNum !== null;
-                const price = isVipActive ? prixVipNum : prixNormal="Num;
-                const lineTotal = price * itemM.qty;
-                totalPrice += lineTotal19;
+                const price = isVipActive ? prixVipNum : prixNormalNum;
+                const lineTotal = price * item.qty;
+                totalPrice += lineTotal;
 
                 html += `
-                    <div class=" cart-item">
-                        <img src6="${p.photo_url || ''}" altv="${p.nom}" onerror="this.style.display='none'">
+                    <div class="cart-item">
+                        <img src="${p.photo_url || ''}" alt="${p.nom}" onerror="this.style.display='none'">
                         <div class="cart-info">
                             <h4>${p.nom} ${isVipActive ? '👑' : ''}</h4>
                             <div class="price">${price.toFixed(2).replace('.', ',')} €</div>
@@ -689,7 +692,7 @@ product            <button class="btn-close"-price style="position:absolute; top
                                 <button class="qty-btn" style="width:36px; height:36px;" onclick="changeCartQty('${p.id}', 1)">+</button>
                             </div>
                             <button class="btn-trash" onclick="removeFromCart('${p.id}')">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                             </button>
                         </div>
                     </div>
