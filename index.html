@@ -6,9 +6,6 @@
     <title>La Formule - Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Exo+2:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* =========================================
-           VARIABLES & RESET
-           ========================================= */
         :root {
             --bg: #05051a;
             --text-main: #f1f3ff;
@@ -23,16 +20,11 @@
             --nav-border: #1a2233;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: var(--bg);
-            background-image: url('IMG_1735.png'); /* Nom réel de ton fichier de fond */
+            background-image: url('IMG_1735.png');
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
@@ -45,558 +37,190 @@
             overflow: hidden;
         }
 
-        h1, h2, h3, .price, .btn-action {
-            font-family: 'Orbitron', sans-serif;
-        }
+        h1, h2, h3, .price, .btn-action { font-family: 'Orbitron', sans-serif; }
 
-        /* =========================================
-           STRUCTURE PRINCIPALE
-           ========================================= */
+        /* --- ÉCRAN DE CONNEXION --- */
+        #login-screen {
+            position: fixed; inset: 0; z-index: 1000;
+            background: var(--bg);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; text-align: center;
+        }
+        #login-screen h1 { color: var(--cyan); font-size: 28px; margin-bottom: 20px; }
+        #login-screen input {
+            width: 100%; max-width: 300px; padding: 15px; margin-bottom: 15px;
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            color: white; border-radius: 8px; text-align: center; font-size: 16px;
+            -webkit-appearance: none;
+        }
+        .btn-main {
+            background: var(--cyan); color: #05061a; border: none; padding: 15px;
+            border-radius: 8px; font-weight: bold; font-size: 16px; width: 100%; max-width: 300px;
+            box-shadow: 0 0 10px var(--cyan); -webkit-appearance: none;
+        }
+        #login-error { color: #ef4444; margin-top: 15px; font-size: 14px; }
+
+        /* --- STRUCTURE PRINCIPALE --- */
         .app-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain;
+            flex: 1; display: flex; flex-direction: column; overflow-y: auto;
+            -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
             padding-bottom: calc(76px + env(safe-area-inset-bottom, 20px) + 16px);
+            display: none; /* Caché tant qu'on n'est pas connecté */
         }
 
-        /* En-tête */
-        header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            padding-top: 20px;
-            margin-bottom: 12px;
-        }
+        header { display: flex; flex-direction: column; align-items: center; padding-top: 20px; margin-bottom: 12px; }
+        header img.logo { width: 230px; height: auto; object-fit: contain; }
 
-        header img.logo {
-            width: 230px;
-            height: auto;
-            object-fit: contain;
-        }
-
-        /* Bouton Info (?) */
         .btn-info {
-            position: fixed;
-            top: 24px;
-            left: 16px;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 1.5px solid var(--cyan);
-            background: rgba(6, 8, 24, 0.72);
-            color: var(--cyan);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 20px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-            box-shadow: 0 0 10px rgba(79, 227, 255, 0.2);
-            transition: all 0.2s;
+            position: fixed; top: 24px; left: 16px; width: 44px; height: 44px;
+            border-radius: 50%; border: 1.5px solid var(--cyan); background: rgba(6, 8, 24, 0.72);
+            color: var(--cyan); font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center; z-index: 50;
+            box-shadow: 0 0 10px rgba(79, 227, 255, 0.2); transition: all 0.2s;
         }
+        .btn-info.active { background: var(--cyan); color: #05061a; }
 
-        .btn-info.active {
-            background: var(--cyan);
-            color: #05061a;
-        }
+        .section-title { font-size: 18px; font-weight: 600; letter-spacing: 0.04em; margin-top: 4px; margin-bottom: 12px; padding: 0 16px; }
 
-        /* Titre de section */
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            margin-top: 4px;
-            margin-bottom: 12px;
-            padding: 0 16px;
-        }
-
-        /* =========================================
-           CARTES PRODUITS
-           ========================================= */
-        .product-list {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            padding: 0 16px;
-        }
-
+        /* --- CARTES PRODUITS --- */
+        .product-list { display: flex; flex-direction: column; gap: 14px; padding: 0 16px; }
         .card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 18px;
-            overflow: hidden;
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
+            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px;
+            overflow: hidden; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+            display: flex; flex-direction: column; cursor: pointer;
         }
 
         .card-img-wrapper {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            position: relative;
+            width: 100%; aspect-ratio: 16 / 9; position: relative;
             background: linear-gradient(135deg, #7d5a22, #34210e);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
         }
+        .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .card-img-wrapper .img-placeholder { color: var(--magenta-light); font-size: 13px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 
-        .card-img-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .card-img-wrapper .img-placeholder {
-            color: var(--magenta-light);
-            font-size: 13px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Badge VIP */
         .vip-badge {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            background: rgba(30, 5, 40, 0.85);
-            border: 1px solid var(--magenta);
-            color: var(--magenta-light);
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 20px;
-            z-index: 2;
+            position: absolute; top: 12px; left: 12px; background: rgba(30, 5, 40, 0.85);
+            border: 1px solid var(--magenta); color: var(--magenta-light);
+            font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; z-index: 2;
         }
 
-        .card-content {
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-        }
+        .card-content { padding: 14px; display: flex; flex-direction: column; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+        .card-title { font-size: 17px; font-weight: 600; font-family: 'Exo 2', sans-serif; }
+        .price { font-size: 17px; color: var(--cyan); font-weight: 600; }
+        .card-desc { font-size: 13px; color: var(--text-sec); margin-bottom: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 4px;
-        }
+        .card-actions { display: flex; gap: 10px; }
+        .qty-selector { display: flex; align-items: center; border: 1px solid rgba(150, 170, 255, 0.4); border-radius: 12px; height: 44px; overflow: hidden; }
+        .qty-btn { width: 44px; height: 44px; background: transparent; border: none; color: var(--text-main); font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .qty-val { width: 32px; text-align: center; font-weight: 600; }
 
-        .card-title {
-            font-size: 17px;
-            font-weight: 600;
-            font-family: 'Exo 2', sans-serif;
-        }
-
-        .price {
-            font-size: 17px;
-            color: var(--cyan);
-            font-weight: 600;
-        }
-
-        .card-desc {
-            font-size: 13px;
-            color: var(--text-sec);
-            margin-bottom: 14px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        /* Sélecteur de quantité */
-        .qty-selector {
-            display: flex;
-            align-items: center;
-            border: 1px solid rgba(150, 170, 255, 0.4);
-            border-radius: 12px;
-            height: 44px;
-            overflow: hidden;
-        }
-
-        .qty-btn {
-            width: 44px;
-            height: 44px;
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .qty-val {
-            width: 32px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        /* Bouton Ajouter */
         .btn-add {
-            flex: 1;
-            height: 44px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(90deg, #25d7ff, #c04dff);
-            color: #05061a;
-            font-size: 15px;
-            font-weight: 600;
-            box-shadow: 0 0 18px rgba(120, 120, 255, 0.45);
-            cursor: pointer;
-            transition: transform 0.1s;
+            flex: 1; height: 44px; border: none; border-radius: 12px;
+            background: linear-gradient(90deg, #25d7ff, #c04dff); color: #05061a;
+            font-size: 15px; font-weight: 600; box-shadow: 0 0 18px rgba(120, 120, 255, 0.45);
+            cursor: pointer; transition: transform 0.1s;
         }
+        .btn-add:active { transform: scale(0.96); }
 
-        .btn-add:active {
-            transform: scale(0.96);
-        }
-
-        /* =========================================
-           BARRE DE NAVIGATION
-           ========================================= */
+        /* --- NAVIGATION --- */
         nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 76px;
-            background: var(--nav-bg);
-            border-top: 1px solid var(--nav-border);
-            display: flex;
-            justify-content: space-around;
-            padding-bottom: env(safe-area-inset-bottom);
-            z-index: 100;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 76px;
+            background: var(--nav-bg); border-top: 1px solid var(--nav-border);
+            display: none; /* Caché tant qu'on n'est pas connecté */
+            justify-content: space-around; padding-bottom: env(safe-area-inset-bottom); z-index: 100;
         }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #8d95ab; font-size: 11px; text-transform: uppercase; font-weight: 500; text-decoration: none; width: 25%; position: relative; }
+        .nav-item.active { color: var(--cyan); }
+        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
+        .cart-badge { position: absolute; top: 10px; right: calc(50% - 16px); background: var(--magenta); color: white; font-size: 10px; font-weight: bold; width: 16px; height: 16px; border-radius: 50%; display: none; align-items: center; justify-content: center; }
 
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #8d95ab;
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 500;
-            text-decoration: none;
-            width: 25%;
-            position: relative;
-        }
+        /* --- MODALES --- */
+        .overlay { position: fixed; inset: 0; background: rgba(3, 4, 14, 0.72); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+        .overlay.open { opacity: 1; pointer-events: auto; }
 
-        .nav-item.active {
-            color: var(--cyan);
-        }
-
-        .nav-item svg {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 4px;
-            fill: currentColor;
-        }
-
-        /* Badge Panier */
-        .cart-badge {
-            position: absolute;
-            top: 10px;
-            right: calc(50% - 16px);
-            background: var(--magenta);
-            color: white;
-            font-size: 10px;
-            font-weight: bold;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* =========================================
-           MODALES (Infos, Fiche Produit, Vidéo)
-           ========================================= */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(3, 4, 14, 0.72);
-            z-index: 200;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-        }
-        .overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Fenêtre Infos */
+        /* Infos */
         .modal-info {
-            position: fixed;
-            top: 130px;
-            left: 16px;
-            right: 16px;
-            background: rgba(10, 12, 36, 0.96);
-            border: 1px solid var(--cyan);
-            border-radius: 20px;
-            padding: 18px;
-            box-shadow: 0 0 28px rgba(79, 227, 255, 0.35);
-            z-index: 210;
-            transform: scale(0.96);
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.18s ease-out;
+            position: fixed; top: 130px; left: 16px; right: 16px; background: rgba(10, 12, 36, 0.96);
+            border: 1px solid var(--cyan); border-radius: 20px; padding: 18px;
+            box-shadow: 0 0 28px rgba(79, 227, 255, 0.35); z-index: 210;
+            transform: scale(0.96); opacity: 0; pointer-events: none; transition: all 0.18s ease-out;
         }
-        .modal-info.open {
-            transform: scale(1);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .modal-title {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .btn-close {
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: transparent;
-            border: none;
-            color: var(--text-sec);
-            font-size: 24px;
-            cursor: pointer;
-            margin: -10px -10px 0 0;
-        }
-
-        .info-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(130, 150, 255, 0.22);
-        }
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-icon {
-            color: var(--cyan);
-            width: 24px;
-            height: 24px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .info-text h4 {
-            font-size: 11px;
-            color: var(--text-sec);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 2px;
-        }
-
-        .info-text p {
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--green);
-        }
-
-        .steps-title {
-            font-size: 11px;
-            color: var(--text-sec);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin: 16px 0 10px 0;
-        }
-
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .step-num {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            border: 1px solid var(--magenta);
-            color: var(--magenta-light);
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
+        .modal-info.open { transform: scale(1); opacity: 1; pointer-events: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .modal-title { font-size: 16px; font-weight: 600; }
+        .btn-close { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; color: var(--text-sec); font-size: 24px; cursor: pointer; margin: -10px -10px 0 0; }
+        
+        .info-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(130, 150, 255, 0.22); }
+        .info-row:last-child { border-bottom: none; }
+        .info-icon { color: var(--cyan); width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .info-text h4 { font-size: 11px; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+        .info-text p { font-size: 15px; display: flex; align-items: center; gap: 6px; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+        
+        .steps-title { font-size: 11px; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.05em; margin: 16px 0 10px 0; }
+        .step { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 14px; }
+        .step-num { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--magenta); color: var(--magenta-light); font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
         /* Fiche Produit */
         .modal-product {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 85%;
-            background: rgba(10, 12, 36, 0.98);
-            border-top: 1px solid var(--card-border);
-            border-radius: 24px 24px 0 0;
-            z-index: 220;
-            transform: translateY(100%);
-            transition: transform 0.25s ease-out;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 85%;
+            background: rgba(10, 12, 36, 0.98); border-top: 1px solid var(--card-border);
+            border-radius: 24px 24px 0 0; z-index: 220;
+            transform: translateY(100%); transition: transform 0.25s ease-out;
+            display: flex; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch;
         }
-        .modal-product.open {
-            transform: translateY(0);
-        }
-
-        .modal-product .card-img-wrapper {
-            border-radius: 24px 24px 0 0;
-        }
-
-        .btn-play-video {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: rgba(6, 8, 24, 0.72=");
-            border: 1.5px solid var(--cyan2);
-            box-shadow: 0 0 16px rgba(79"><, 227, 255, rect0.4);
-            display: flex;
-            align-items: center x;
-            justify-content: center;
-            cursor: pointer;
-            z="-index: 5;
-        }
-        .btn-play-video svg {
-            width: 24px;
-            height: 24px;
-            fill: var(--cyan);
-            margin-left: 4px;
-        }
-
-        .product-details {
-            padding: 20px;
-            padding-bottom: calc(20px + env(safe-area-inset-bottom));
-        }
+        .modal-product.open { transform: translateY(0); }
+        .modal-product .card-img-wrapper { border-radius: 24px 24px 0 0; }
         
-        .product-details .price {
-            margin-bottom: 10px;
+        .btn-play-video {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 56px; height: 56px; border-radius: 50%; background: rgba(6, 8, 24, 0.72);
+            border: 1.5px solid var(--cyan); box-shadow: 0 0 16px rgba(79, 227, 255, 0.4);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5;
         }
-        .product-details .full-desc {
-            font-size: 14px;
-            color: var(--text-sec);
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
+        .btn-play-video svg { width: 24px; height: 24px; fill: var(--cyan); margin-left: 4px; }
 
-        /* Modale Vidéo */
-        .modal-video {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            z-index: 300;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-video.open {
-            display: flex;
-        }
-        .modal-video video {
-            width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
+        .product-details { padding: 20px; padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
+        .product-details .price { margin-bottom: 10px; }
+        .product-details .full-desc { font-size: 14px; color: var(--text-sec); margin-bottom: 20px; line-height: 1.5; }
 
-        /* Skeleton Loading */
-        .skeleton {
-            background: #1a2233;
-            border-radius: 18px;
-            height: 280px;
-            position: relative;
-            overflow: hidden;
+        /* Modale Vidéo - SÉCURISÉE */
+        #modal-video {
+            display: none; /* Caché en dur */
+            position: fixed; inset: 0; background: #000; z-index: 300;
+            align-items: center; justify-content: center;
         }
-        .skeleton::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transform: translateX(-100%);
-            animation: shimmer 1.5s infinite;
-        }
-        @keyframes shimmer {
-            100% { transform: translateX(100%); }
-        }
+        #modal-video.open { display: flex; }
+        #modal-video video { width: 100%; max-height: 100%; object-fit: contain; }
+
+        /* Skeleton */
+        .skeleton { background: #1a2233; border-radius: 18px; height: 280px; position: relative; overflow: hidden; }
+        .skeleton::after { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); transform: translateX(-100%); animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
     </style>
 </head>
 <body>
 
-    <!-- CONFIGURATION -->
-    <script>
-        const CONFIG = {
-            SUPABASE_URL: 'https://xwctaegjcknthjwyyolq.supabase.co',
-            SUPABASE_KEY: 'sb_publishable_8orKy9SLqBdGRkvbAhfQeA_xVKujcDl',
-            MDP_GENERAL: 'TON_MOT_DE_PASSE_GENERAL_ICI', // ⚠️ À REMPLACER
-            CLE_VIP: null
-        };
+    <!-- ÉCRAN DE CONNEXION -->
+    <div id="login-screen">
+        <h1>LA FORMULE</h1>
+        <input type="password" id="pwd-input" placeholder="Mot de passe">
+        <button class="btn-main" onclick="login()">ENTRER</button>
+        <p id="login-error"></p>
+    </div>
 
-        if (CONFIG.MDP_GENERAL === 'TON_MOT_DE_PASSE_GENERAL_ICI') {
-            CONFIG.MDP_GENERAL = prompt("Mode test : entre ton mot de passe général") || "";
-        }
-    </script>
+    <!-- BOUTON INFO -->
+    <button class="btn-info" id="btn-info" style="display:none;" aria-label="Infos pratiques">?</button>
 
-    <!-- BOUTON INFO FIXE -->
-    <button class="btn-info" id="btn-info" aria-label="Infos pratiques">?</button>
-
-    <!-- CONTENEUR PRINCIPAL SCROLLABLE -->
-    <div class="app-container">
+    <!-- CONTENEUR PRINCIPAL -->
+    <div class="app-container" id="app-container">
         <header>
-            <!-- Nom réel de ton fichier logo -->
             <img src="IMG_1734.jpeg" alt="La Formule" class="logo" onerror="this.style.display='none'">
         </header>
 
         <h2 class="section-title">Notre menu</h2>
 
-        <!-- LISTE DES PRODUITS -->
         <div class="product-list" id="product-list">
             <div class="skeleton"></div>
             <div class="skeleton"></div>
@@ -604,74 +228,41 @@
         </div>
     </div>
 
-    <!-- BARRE DE NAVIGATION -->
-    <nav>
+    <!-- NAVIGATION -->
+    <nav id="main-nav">
         <a href="#" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            Accueil
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Accueil
         </a>
         <a href="#" class="nav-item active">
-            <svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11z"/><circle cx="17.5" cy="17.5" r="4.5"/><path d="M2 13h10v9H2z"/></svg>
-            Menu
+            <svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11z"/><circle cx="17.5" cy="17.5" r="4.5"/><path d="M2 13h10v9H2z"/></svg> Menu
         </a>
         <a href="#" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
-            Comparer
+            <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg> Comparer
         </a>
         <a href="#" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-            Panier
+            <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg> Panier
             <span class="cart-badge" id="cart-badge">0</span>
         </a>
     </nav>
 
-    <!-- MODALES -->
     <div class="overlay" id="overlay"></div>
 
-    <!-- Fenêtre Infos -->
+    <!-- MODALE INFOS -->
     <div class="modal-info" id="modal-info">
         <div class="modal-header">
             <h3 class="modal-title">Infos pratiques</h3>
             <button class="btn-close" onclick="closeInfos()">×</button>
         </div>
-        
-        <div class="info-row">
-            <div class="info-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            </div>
-            <div class="info-text">
-                <h4>Horaires</h4>
-                <p><span class="status-dot"></span> Ouvert 12h–00h</p>
-            </div>
-        </div>
-
-        <div class="info-row">
-            <div class="info-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            </div>
-            <div class="info-text">
-                <h4>Livraison</h4>
-                <p>44300 et alentours</p>
-            </div>
-        </div>
-
-        <div class="info-row">
-            <div class="info-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
-            </div>
-            <div class="info-text">
-                <h4>Paiement</h4>
-                <p>À la livraison</p>
-            </div>
-        </div>
-
+        <div class="info-row"><div class="info-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div class="info-text"><h4>Horaires</h4><p><span class="status-dot"></span> Ouvert 12h–00h</p></div></div>
+        <div class="info-row"><div class="info-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="info-text"><h4>Livraison</h4><p>44300 et alentours</p></div></div>
+        <div class="info-row"><div class="info-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg></div><div class="info-text"><h4>Paiement</h4><p>À la livraison</p></div></div>
         <div class="steps-title">Comment commander</div>
         <div class="step"><div class="step-num">1</div> Choisis tes produits</div>
         <div class="step"><div class="step-num">2</div> Valide ton panier</div>
         <div class="step"><div class="step-num">3</div> Envoie ta commande par message</div>
     </div>
 
-    <!-- Fiche Produit -->
+    <!-- MODALE PRODUIT -->
     <div class="modal-product" id="modal-product">
         <div class="card-img-wrapper" id="product-img-wrapper">
             <button class="btn-close" style="position:absolute; top:16px; right:16px; background:rgba(0,0,0,0.5); color:white; border-radius:50%; z-index:10;" onclick="closeProduct()">×</button>
@@ -680,7 +271,6 @@
             <h2 class="card-title" id="product-title" style="font-size: 22px; margin-bottom: 4px;">Nom</h2>
             <div class="price" id="product-price" style="font-size: 20px;">0.00 €</div>
             <p class="full-desc" id="product-desc">Description complète</p>
-            
             <div class="card-actions" style="margin-top: 20px;">
                 <div class="qty-selector">
                     <button class="qty-btn" onclick="changeQty(-1)">−</button>
@@ -692,87 +282,91 @@
         </div>
     </div>
 
-    <!-- Lecteur Vidéo -->
-    <div class="modal-video" id="modal-video">
+    <!-- MODALE VIDÉO -->
+    <div id="modal-video">
         <button class="btn-close" style="position:absolute; top:calc(16px + env(safe-area-inset-top)); right:16px; color:white; font-size:32px; z-index:10;" onclick="closeVideo()">×</button>
         <video id="video-player" controls playsinline preload="none"></video>
     </div>
 
     <script>
-        // =========================================
-        // ÉTAT DE L'APPLICATION
-        // =========================================
+        // --- CONFIGURATION ---
+        // ⚠️ REMPLACE PAR TON NOUVEAU MOT DE PASSE ICI
+        const CONFIG = {
+            SUPABASE_URL: 'https://xwctaegjcknthjwyyolq.supabase.co',
+            SUPABASE_KEY: 'sb_publishable_8orKy9SLqBdGRkvbAhfQeA_xVKujcDl',
+            MDP_GENERAL: 'TON_MOT_DE_PASSE_ICI', 
+            CLE_VIP: null
+        };
+
         let products = [];
         let cart = []; 
-        
         let currentProduct = null;
         let currentModalQty = 1;
         const qtyStates = {}; 
+        let isLoggedIn = false;
 
-        // =========================================
-        // CHARGEMENT DES DONNÉES
-        // =========================================
+        // --- CONNEXION ---
+        async function login() {
+            const pwd = document.getElementById('pwd-input').value;
+            const err = document.getElementById('login-error');
+            err.textContent = 'Vérification...';
+            
+            try {
+                const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/verifier_mdp_general`, {
+                    method: 'POST', headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_mdp: pwd })
+                });
+                const data = await res.json();
+                
+                if (data === true) {
+                    CONFIG.MDP_GENERAL = pwd;
+                    isLoggedIn = true;
+                    
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('app-container').style.display = 'flex';
+                    document.getElementById('main-nav').style.display = 'flex';
+                    document.getElementById('btn-info').style.display = 'flex';
+                    
+                    fetchProducts();
+                } else {
+                    err.textContent = 'Mot de passe incorrect.';
+                }
+            } catch(e) {
+                err.textContent = 'Erreur de connexion.';
+            }
+        }
+
+        // --- CHARGEMENT DES PRODUITS ---
         async function fetchProducts() {
             try {
                 const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/lister_produits`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': CONFIG.SUPABASE_KEY,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        p_mdp: CONFIG.MDP_GENERAL,
-                        p_cle: CONFIG.CLE_VIP
-                    })
+                    method: 'POST', headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_mdp: CONFIG.MDP_GENERAL, p_cle: CONFIG.CLE_VIP })
                 });
                 
                 if (!res.ok) throw new Error("Erreur réseau");
-                
                 const data = await res.json();
                 
-                if (data && data.length > 0) {
-                    products = data;
-                } else {
-                    throw new Error("Aucun produit");
-                }
+                if (data && data.length > 0) products = data;
+                else throw new Error("Aucun produit");
+                
             } catch (err) {
-                console.warn("Mode hors-ligne ou erreur API :", err);
+                console.warn("Mode hors-ligne :", err);
                 products = [
-                    {
-                        id: "1",
-                        nom: "Miel du Yémen 250 g",
-                        description: "Pot en verre, récolte 2026",
-                        prix: 35.00,
-                        prix_vip: null,
-                        reserve_vip: false,
-                        photo_url: "https://images.unsplash.com/photo-1587049352847-8d4e2a6e5e1b?q=80&w=600&auto=format&fit=crop",
-                        video_url: null
-                    },
-                    {
-                        id: "2",
-                        nom: "Miel du Yémen 500 g",
-                        description: "Le grand format, parfait pour les familles.",
-                        prix: 62.00,
-                        prix_vip: 55.00,
-                        reserve_vip: true,
-                        photo_url: "https://images.unsplash.com/photo-1587049352847-8d4e2a6e5e1b?q=80&w=600&auto=format&fit=crop",
-                        video_url: "https://www.w3schools.com/html/mov_bbb.mp4"
-                    }
+                    { id: "1", nom: "Miel du Yémen 250 g", description: "Pot en verre, récolte 2026", prix: 35.00, prix_vip: null, reserve_vip: false, photo_url: "https://images.unsplash.com/photo-1587049352847-8d4e2a6e5e1b?q=80&w=600&auto=format&fit=crop", video_url: null },
+                    { id: "2", nom: "Miel du Yémen 500 g", description: "Le grand format.", prix: 62.00, prix_vip: 55.00, reserve_vip: true, photo_url: "https://images.unsplash.com/photo-1587049352847-8d4e2a6e5e1b?q=80&w=600&auto=format&fit=crop", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" }
                 ];
             }
             renderProducts();
         }
 
-        // =========================================
-        // AFFICHAGE DES PRODUITS
-        // =========================================
+        // --- AFFICHAGE ---
         function renderProducts() {
             const container = document.getElementById('product-list');
             container.innerHTML = ''; 
 
             products.forEach(p => {
                 qtyStates[p.id] = 1; 
-
                 const isVip = CONFIG.CLE_VIP && p.prix_vip;
                 const displayPrice = isVip ? p.prix_vip : p.prix;
 
@@ -802,8 +396,7 @@
                 } else {
                     const ph = document.createElement('div');
                     ph.className = 'img-placeholder';
-                    ph.innerHTML = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                                    <span>Photo du produit</span>`;
+                    ph.innerHTML = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Photo du produit</span>`;
                     imgWrapper.appendChild(ph);
                 }
 
@@ -817,14 +410,14 @@
                 title.className = 'card-title';
                 title.textContent = p.nom; 
                 
-                const price = document.createElement btn('span');
+                const price = document.createElement('span');
                 price.className = 'price';
-               Info price.textContent = `${displayPrice.toFixed(2).replace('..classList', ',')} €`;
+                price.textContent = `${displayPrice.toFixed(2).replace('.', ',')} €`;
 
-                header.appendChild(title.add);
+                header.appendChild(title);
                 header.appendChild(price);
 
-                const desc =('active document.createElement('p');
+                const desc = document.createElement('p');
                 desc.className = 'card-desc';
                 desc.textContent = p.description || ''; 
 
@@ -871,20 +464,13 @@
             });
         }
 
-        function updateQtyDisplay(id) {
-            document.getElementById(`qty-${id}`).textContent = qtyStates[id];
-        }
+        function updateQtyDisplay(id) { document.getElementById(`qty-${id}`).textContent = qtyStates[id]; }
 
-        // =========================================
-        // PANIER
-        // =========================================
+        // --- PANIER ---
         function addToCart(id, qty) {
             const existing = cart.find(item => item.id === id);
-            if (existing) {
-                existing.qty += qty;
-            } else {
-                cart.push({ id, qty });
-            }
+            if (existing) existing.qty += qty;
+            else cart.push({ id, qty });
             updateCartBadge();
         }
 
@@ -897,17 +483,11 @@
         function updateCartBadge() {
             const total = cart.reduce((sum, item) => sum + item.qty, 0);
             const badge = document.getElementById('cart-badge');
-            if (total > 0) {
-                badge.textContent = total;
-                badge.style.display = 'flex';
-            } else {
-                badge.style.display = 'none';
-            }
+            if (total > 0) { badge.textContent = total; badge.style.display = 'flex'; } 
+            else { badge.style.display = 'none'; }
         }
 
-        // =========================================
-        // LOGIQUE MODALE INFOS
-        // =========================================
+        // --- INFOS ---
         const btnInfo = document.getElementById('btn-info');
         const modalInfo = document.getElementById('modal-info');
         const overlay = document.getElementById('overlay');
@@ -915,7 +495,7 @@
         btnInfo.onclick = () => {
             modalInfo.classList.add('open');
             overlay.classList.add('open');
-           ');
+            btnInfo.classList.add('active');
             document.body.style.overflow = 'hidden';
         };
 
@@ -926,22 +506,9 @@
             document.body.style.overflow = '';
         }
 
-        overlay.onclick = () => {
-            closeInfos();
-            closeProduct();
-        };
+        overlay.onclick = () => { closeInfos(); closeProduct(); };
 
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeInfos();
-                closeProduct();
-                closeVideo();
-            }
-        });
-
-        // =========================================
-        // LOGIQUE FICHE PRODUIT
-        // =========================================
+        // --- FICHE PRODUIT ---
         const modalProduct = document.getElementById('modal-product');
         
         function openProductModal(p) {
@@ -962,8 +529,6 @@
             if (p.photo_url) {
                 const img = document.createElement('img');
                 img.src = p.photo_url;
-                img.loading = 'lazy';
-                img.decoding = 'async';
                 imgWrapper.appendChild(img);
             }
 
@@ -994,9 +559,7 @@
             document.getElementById('product-qty').textContent = currentModalQty;
         }
 
-        // =========================================
-        // LOGIQUE VIDÉO
-        // =========================================
+        // --- VIDÉO ---
         const modalVideo = document.getElementById('modal-video');
         const videoPlayer = document.getElementById('video-player');
 
@@ -1012,11 +575,10 @@
             modalVideo.classList.remove('open');
         }
 
-        // =========================================
-        // INITIALISATION
-        // =========================================
-        fetchProducts();
-
+        // Fermer avec la touche Echap
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') { closeInfos(); closeProduct(); closeVideo(); }
+        });
     </script>
 </body>
 </html>
