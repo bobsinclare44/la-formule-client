@@ -110,6 +110,7 @@
         .vip-box { background: rgba(255, 43, 214, 0.1); border: 1px solid var(--magenta); padding: 20px; border-radius: 10px; text-align: center; margin: 0 16px 20px 16px; }
         .vip-box input { width: 100%; padding: 12px; margin: 10px 0; background: var(--bg); border: 1px solid var(--magenta); color: white; border-radius: 5px; text-align: center; font-size: 16px; }
         .btn-vip { background: var(--magenta); color: white; border: none; padding: 12px; border-radius: 5px; width: 100%; font-weight: bold; box-shadow: 0 0 10px var(--magenta); cursor: pointer; }
+        .btn-logout-vip { background: transparent; color: var(--text-sec); border: 1px solid var(--text-sec); padding: 10px 20px; border-radius: 5px; margin-top: 15px; cursor: pointer; font-size: 13px; }
 
         /* --- PANIER --- */
         .cart-list { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
@@ -186,7 +187,6 @@
     <!-- ÉCRAN DE CONNEXION -->
     <div id="login-screen">
         <img src="B3345BC8-98CE-49FB-A06B-4B2F005C4132.png" alt="La Formule">
-        <!-- Correction : utilisation d'un formulaire standard -->
         <form onsubmit="event.preventDefault(); login();">
             <input type="password" id="input-mdp" placeholder="Mot de passe général" required>
             <button type="submit" class="btn-main">ENTRER</button>
@@ -242,7 +242,8 @@
             <div id="vip-active-state" style="display: none; text-align: center; padding: 20px;">
                 <div style="background: rgba(255,43,214,0.1); border: 1px solid var(--magenta); border-radius: 18px; padding: 20px;">
                     <p style="color: var(--magenta); font-weight: bold; font-size: 18px; margin-bottom: 10px;">Statut : Membre VIP Actif 👑</p>
-                    <p style="font-size: 14px; color: var(--text-sec);">Les prix VIP sont appliqués automatiquement sur tout le menu.</p>
+                    <p style="font-size: 14px; color: var(--text-sec); margin-bottom: 15px;">Les prix VIP sont appliqués automatiquement sur tout le menu.</p>
+                    <button class="btn-logout-vip" onclick="deconnecterVip()">Se déconnecter</button>
                 </div>
             </div>
 
@@ -429,6 +430,14 @@
             }
         }
 
+        function deconnecterVip() {
+            state.cleVip = null;
+            sessionStorage.removeItem('lf_vip');
+            updateVipUi();
+            fetchProducts();
+            updateCartUI();
+        }
+
         async function verifierVip() {
             const cle = document.getElementById('cle-vip-input').value.trim();
             if (!cle) return;
@@ -549,6 +558,8 @@
                 const priceNormal = document.createElement('span');
                 priceNormal.className = 'price';
                 priceNormal.textContent = `${prixNormalNum.toFixed(2).replace('.', ',')} €`;
+                
+                // Si l'utilisateur est VIP, on barre le prix normal
                 if (isVipActive && hasVipPrice) {
                     priceNormal.style.textDecoration = 'line-through';
                     priceNormal.style.opacity = '0.5';
@@ -556,13 +567,12 @@
                 }
                 priceContainer.appendChild(priceNormal);
 
+                // Le prix VIP s'affiche TOUJOURS s'il existe, que l'on soit VIP ou non
                 if (hasVipPrice) {
                     const priceVip = document.createElement('span');
                     priceVip.className = 'price-vip';
                     priceVip.innerHTML = `<span class="price-vip-label">Prix VIP</span> ${prixVipNum.toFixed(2).replace('.', ',')} €`;
-                    if (!isVipActive) {
-                        priceVip.style.opacity = '0.7';
-                    }
+                    // On enlève l'opacité réduite pour que les non-VIP voient bien le prix
                     priceContainer.appendChild(priceVip);
                 }
 
