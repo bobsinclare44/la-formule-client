@@ -19,8 +19,8 @@
         body { background: var(--bg); color: var(--text); font-family: 'Exo 2', sans-serif; padding-bottom: calc(70px + var(--safe-bottom)); overflow-x: hidden; }
         h1, h2, h3, .btn-main { font-family: 'Orbitron', sans-serif; }
         
-        /* Portail */
-        #portail { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; text-align: center; }
+        /* Portail - Corrigé pour iOS (100dvh) */
+        #portail { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; min-height: 100dvh; padding: 20px; text-align: center; }
         #portail h1 { color: var(--cyan); text-shadow: 0 0 15px var(--cyan); font-size: 32px; margin-bottom: 20px; }
         #portail input { width: 100%; max-width: 300px; padding: 15px; margin: 15px 0; background: var(--card); border: 1px solid var(--border); color: white; border-radius: 8px; text-align: center; font-size: 16px; -webkit-appearance: none; appearance: none; }
         .btn-main { background: var(--cyan); color: black; border: none; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; max-width: 300px; box-shadow: 0 0 10px var(--cyan); transition: 0.2s; -webkit-appearance: none; appearance: none; }
@@ -53,7 +53,7 @@
         .prod-prix { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: bold; }
         .prod-prix.vip { color: var(--magenta); text-shadow: 0 0 5px var(--magenta); }
         
-        /* Boutons corrigés pour iPhone */
+        /* Boutons corrigés */
         .btn-add { background: var(--border); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-size: 12px; -webkit-appearance: none; appearance: none; transition: 0.1s; }
         .btn-add:active { transform: scale(0.95); background: var(--cyan); color: black; }
         
@@ -79,21 +79,23 @@
         nav { position: fixed; bottom: 0; left: 0; width: 100%; height: calc(60px + var(--safe-bottom)); background: #070a12; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: flex-start; padding-top: 10px; z-index: 100; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: #555; font-size: 10px; text-transform: uppercase; font-weight: bold; text-decoration: none; width: 20%; -webkit-tap-highlight-color: transparent; cursor: pointer; }
         .nav-item.active { color: var(--cyan); text-shadow: 0 0 5px var(--cyan); }
-        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: current }
-Color; }
-        #nav-vip { display        
-: none;        /* Modale choix messagerie */
-        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: var(--card); padding: 20px; border-radius: 10px; width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--cyan); }
-        .modal-content button { width: 100%; padding: 15px; margin-top: 10px; border: none; border-radius: 5px; font-weight: bold; color: white; font-size: 16px; -webkit-appearance: none; appearance: none; }
+        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
+        #nav-vip { display: none; }
+        
+        /* Modales (Fond noir et boutons pleine largeur) */
+        #modal, #video-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; background: rgba(0,0,0,0.9); z-index: 9999; box-sizing: border-box; }
+        
+        #modal { align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+        .modal-content { background: var(--card); padding: 20px; border-radius: 10px; width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--cyan); margin: auto; }
+        
+        .modal-content button { display: block; width: 100%; padding: 15px; margin: 10px 0 0 0; border: none; border-radius: 5px; font-weight: bold; color: white; font-size: 16px; -webkit-appearance: none; appearance: none; box-sizing: border-box; }
         .btn-wa { background: #25D366; color: black !important; }
         .btn-tg { background: #0088cc; }
         .btn-sg { background: #3a76f0; }
 
-        /* Modale Vidéo */
-        #video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 300; align-items: center; justify-content: center; padding: 10px; }
+        #video-modal { display: flex; align-items: center; justify-content: center; padding: 10px; }
         #video-player { width: 100%; max-height: 80vh; border-radius: 10px; border: 1px solid var(--cyan); }
-        .btn-close-video { position: absolute; top: 20px; right: 20px; background: var(--cyan); color: black; border: none; padding: 10px 15px; border-radius: 5px; font-weight: bold; z-index: 310; -webkit-appearance: none; appearance: none; }
+        .btn-close-video { position: absolute; top: 20px; right: 20px; background: var(--cyan); color: black; border: none; padding: 10px 15px; border-radius: 5px; font-weight: bold; z-index: 10000; -webkit-appearance: none; appearance: none; }
     </style>
 </head>
 <body>
@@ -206,7 +208,7 @@ Color; }
             <button class="btn-wa" onclick="envoyerMessage('wa')">WhatsApp</button>
             <button class="btn-tg" onclick="envoyerMessage('tg')">Telegram</button>
             <button class="btn-sg" onclick="envoyerMessage('sg')">Signal</button>
-            <button style="background:transparent; color:#888; margin-top:15px; font-size:12px;" onclick="document.getElementById('modal').style.display='none'">Fermer</button>
+            <button style="background:transparent; color:#888; margin-top:15px; font-size:12px;" onclick="fermerModales()">Fermer</button>
         </div>
     </div>
 
@@ -227,20 +229,18 @@ Color; }
         let numTicketEnCours = null;
         let contactVendeur = '';
 
-        // --- INITIALISATION ---
-        async function init() {
-            if (mdpGeneral) {
-                document.getElementById('portail').style.display = 'none';
-                document.getElementById('app').style.display = 'block';
-                loadInfosPubliques();
-                loadProduits();
-                updatePanierUI();
-                if (cleVip) {
-                    document.getElementById('nav-vip').style.display = 'flex';
-                    verifierCleVip(cleVip, true);
+        // Sécurité anti-cache iOS : on force la fermeture des modales au retour
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+                fermerModales();
+                document.getElementById('video-modal').style.display = 'none';
+                document.getElementById('video-player').pause();
+                if (!mdpGeneral) {
+                    document.getElementById('portail').style.display = 'flex';
+                    document.getElementById('app').style.display = 'none';
                 }
             }
-        }
+        });
 
         async function entrerSite() {
             const pwd = document.getElementById('pwd-portail').value;
@@ -249,8 +249,8 @@ Color; }
             
             try {
                 const res = await fetch(`${SB_URL}/rest/v1/rpc/verifier_mdp_general`, {
-                    method: load 'POST', headers: { 'apikeInfy': SB_KEY, 'Content-Type':os 'application/json' },
-                    body: JSONP.stringify({ p_mdp: pwd })
+                    method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_mdp: pwd })
                 });
                 const data = await res.json();
                 
@@ -258,7 +258,7 @@ Color; }
                     mdpGeneral = pwd;
                     document.getElementById('portail').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
-                   ubliques();
+                    loadInfosPubliques();
                     loadProduits();
                     updatePanierUI();
                     if (cleVip) {
@@ -287,9 +287,9 @@ Color; }
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(`page-${pageId}`).classList.add('active');
             event.currentTarget.classList.add('active');
+            window.scrollTo(0,0);
         }
 
-        // --- PRODUITS ---
         async function loadProduits() {
             const res = await fetch(`${SB_URL}/rest/v1/rpc/lister_produits`, {
                 method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
@@ -335,7 +335,6 @@ Color; }
             });
         }
 
-        // --- LECTEUR VIDEO ---
         function ouvrirVideo(url) {
             const modal = document.getElementById('video-modal');
             const player = document.getElementById('video-player');
@@ -352,7 +351,6 @@ Color; }
             modal.style.display = 'none';
         }
 
-        // --- PANIER ---
         function ajouterAuPanier(id) {
             const prod = produitsCache.find(p => p.id === id);
             if (!prod) return;
@@ -414,7 +412,6 @@ Color; }
             updatePanierUI();
         }
 
-        // --- VIP ---
         async function verifierVip() {
             const cle = document.getElementById('cle-vip-input').value.trim();
             if (!cle) return;
@@ -452,11 +449,10 @@ Color; }
             }
         }
 
-        // --- COMMANDE ---
         async function validerCommande() {
             if (panier.length === 0) return;
             const btn = document.getElementById('btn-checkout');
-            btn.textContent = 'Traitement en cours...';
+            btn.textContent = 'Traitement...';
             btn.disabled = true;
 
             try {
@@ -481,14 +477,14 @@ Color; }
                     navigator.clipboard.writeText(message).then(() => {
                         document.getElementById('modal').style.display = 'flex';
                     }).catch(() => {
-                       }/ alert("Erreur de copie, voici le message :\n\nrest" + message);
-                        document.getElementById('modal').style.display = '/vflex';
+                        alert("Voici le message à copier :\n\n" + message);
+                        document.getElementById('modal').style.display = 'flex';
                     });
                 } else {
-                    alert("Erre1ur lors de la création du ticket.");
+                    alert("Erreur lors de la création du ticket.");
                 }
-            } catch(e/r) {
-                alert("Erreur de connexion au serveurpc.");
+            } catch(e) {
+                alert("Erreur de connexion au serveur.");
             } finally {
                 btn.textContent = 'VALIDER LA COMMANDE';
                 btn.disabled = false;
@@ -506,11 +502,14 @@ Color; }
             } else {
                 window.open(`https://signal.me/#p/+${tel}`, '_blank');
             }
-            document.getElementById('modal').style.display = 'none';
+            fermerModales();
             switchPage('accueil');
         }
 
-        // --- SUIVI ---
+        function fermerModales() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
         async function suivreCommande() {
             const num = document.getElementById('suivi-numero').value;
             if (!num) return;
@@ -518,7 +517,7 @@ Color; }
             resDiv.innerHTML = 'Recherche...';
 
             try {
-                const res = await fetch(`${SB_URL/suivre_commande`, {
+                const res = await fetch(`${SB_URL}/rest/v1/rpc/suivre_commande`, {
                     method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ p_numero: parseInt(num) })
                 });
