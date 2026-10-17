@@ -1,10 +1,3 @@
-Ton fichier a un nom très long généré par l'iPhone (B3345BC8-98CE-49FB-A06B-4B2F005C4132.png). Au lieu de t'embêter à le renommer, j'ai directement mis ce nom dans le code. Le logo s'affichera donc parfaitement.
-
-J'ai aussi intégré ton numéro de téléphone dans une variable CONTACTS tout en haut du script. Le jour où tu changes de numéro, c'est la seule ligne que tu auras à modifier.
-
-Voici le code complet (mon message précédent avait été coupé). Remplace tout le contenu de ton fichier index.html par ceci et fais Commit changes :
-
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -13,9 +6,6 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
     <title>La Formule</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Exo+2:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* =========================================
-           VARIABLES & RESET (Design existant conservé)
-           ========================================= */
         :root {
             --bg: #05051a;
             --text-main: #f1f3ff;
@@ -35,7 +25,7 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
 
         body {
             background-color: var(--bg);
-            background-image: url('IMG_1735.png'); /* Ton fond */
+            background-image: url('IMG_1735.png');
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
@@ -68,17 +58,12 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
             border-radius: 8px; font-weight: 600; font-size: 16px; width: 100%; max-width: 300px;
             box-shadow: 0 0 18px rgba(120, 120, 255, 0.45); -webkit-appearance: none; cursor: pointer;
         }
-        #login-error { color: var(--red); margin-top: 15px; font-size: 14px; }
+        #login-error { color: var(--red); margin-top: 15px; font-size: 14px; min-height: 20px; }
         .link-vip { color: var(--cyan); font-size: 13px; margin-top: 20px; text-decoration: underline; cursor: pointer; }
 
-        /* --- STRUCTURE PRINCIPALE --- */
-        .app-content {
-            flex: 1; position: relative; overflow: hidden; display: none;
-        }
-        .view {
-            position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
-            display: none; padding-bottom: calc(76px + env(safe-area-inset-bottom, 20px) + 16px);
-        }
+        /* --- STRUCTURE --- */
+        .app-content { flex: 1; position: relative; overflow: hidden; display: none; }
+        .view { position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; display: none; padding-bottom: calc(76px + env(safe-area-inset-bottom, 20px) + 16px); }
         .view.active { display: block; }
 
         /* --- ACCUEIL --- */
@@ -93,20 +78,13 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
         .suivi-input-row input { flex: 1; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--card-border); color: white; border-radius: 8px; font-size: 16px; }
         .suivi-input-row button { padding: 0 16px; border: none; border-radius: 8px; background: var(--cyan); color: #05061a; font-weight: bold; cursor: pointer; }
 
-        /* --- MENU (Inchangé) --- */
+        /* --- MENU --- */
         header { display: flex; flex-direction: column; align-items: center; padding-top: 20px; margin-bottom: 12px; }
         header img.logo { width: 230px; height: auto; object-fit: contain; }
         .section-title { font-size: 18px; font-weight: 600; letter-spacing: 0.04em; margin-top: 4px; margin-bottom: 12px; padding: 0 16px; }
         .product-list { display: flex; flex-direction: column; gap: 14px; padding: 0 16px; }
-        .card {
-            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px;
-            overflow: hidden; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-            display: flex; flex-direction: column; cursor: pointer;
-        }
-        .card-img-wrapper {
-            width: 100%; aspect-ratio: 16 / 9; position: relative; background: linear-gradient(135deg, #7d5a22, #34210e);
-            display: flex; align-items: center; justify-content: center;
-        }
+        .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px; overflow: hidden; backdrop-filter: blur(10px); display: flex; flex-direction: column; cursor: pointer; }
+        .card-img-wrapper { width: 100%; aspect-ratio: 16 / 9; position: relative; background: linear-gradient(135deg, #7d5a22, #34210e); display: flex; align-items: center; justify-content: center; }
         .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .card-img-wrapper .img-placeholder { color: var(--magenta-light); font-size: 13px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
         .vip-badge { position: absolute; top: 12px; left: 12px; background: rgba(30, 5, 40, 0.85); border: 1px solid var(--magenta); color: var(--magenta-light); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; z-index: 2; }
@@ -119,7 +97,7 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
         .qty-selector { display: flex; align-items: center; border: 1px solid rgba(150, 170, 255, 0.4); border-radius: 12px; height: 44px; overflow: hidden; }
         .qty-btn { width: 44px; height: 44px; background: transparent; border: none; color: var(--text-main); font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .qty-val { width: 32px; text-align: center; font-weight: 600; }
-        .btn-add { flex: 1; height: 44px; border: none; border-radius: 12px; background: linear-gradient(90deg, #25d7ff, #c04dff); color: #05061a; font-size: 15px; font-weight: 600; box-shadow: 0 0 18px rgba(120, 120, 255, 0.45); cursor: pointer; transition: transform 0.1s; }
+        .btn-add { flex: 1; height: 44px; border: none; border-radius: 12px; background: linear-gradient(90deg, #25d7ff, #c04dff); color: #05061a; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform 0.1s; }
         .btn-add:active { transform: scale(0.96); }
 
         /* --- PANIER --- */
@@ -140,7 +118,7 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
         /* --- MODALES --- */
         .overlay { position: fixed; inset: 0; background: rgba(3, 4, 14, 0.72); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
         .overlay.open { opacity: 1; pointer-events: auto; }
-        .modal-info { position: fixed; top: 130px; left: 16px; right: 16px; background: rgba(10, 12, 36, 0.96); border: 1px solid var(--cyan); border-radius: 20px; padding: 18px; box-shadow: 0 0 28px rgba(79, 227, 255, 0.35); z-index: 210; transform: scale(0.96); opacity: 0; pointer-events: none; transition: all 0.18s ease-out; }
+        .modal-info { position: fixed; top: 130px; left: 16px; right: 16px; background: rgba(10, 12, 36, 0.96); border: 1px solid var(--cyan); border-radius: 20px; padding: 18px; z-index: 210; transform: scale(0.96); opacity: 0; pointer-events: none; transition: all 0.18s ease-out; }
         .modal-info.open { transform: scale(1); opacity: 1; pointer-events: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .modal-title { font-size: 16px; font-weight: 600; }
@@ -154,10 +132,10 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
         .step { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 14px; }
         .step-num { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--magenta); color: var(--magenta-light); font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         
-        .modal-product { position: fixed; bottom: 0; left: 0; width: 100%; height: 85%; background: rgba(10, 12, 36, 0.98); border-top: 1px solid var(--card-border); border-radius: 24px 24px 0 0; z-index: 220; transform: translateY(100%); transition: transform 0.25s ease-out; display: flex; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .modal-product { position: fixed; bottom: 0; left: 0; width: 100%; height: 85%; background: rgba(10, 12, 36, 0.98); border-top: 1px solid var(--card-border); border-radius: 24px 24px 0 0; z-index: 220; transform: translateY(100%); transition: transform 0.25s ease-out; display: flex; flex-direction: column; overflow-y: auto; }
         .modal-product.open { transform: translateY(0); }
         .modal-product .card-img-wrapper { border-radius: 24px 24px 0 0; }
-        .btn-play-video { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; border-radius: 50%; background: rgba(6, 8, 24, 0.72); border: 1.5px solid var(--cyan); box-shadow: 0 0 16px rgba(79, 227, 255, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5; }
+        .btn-play-video { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; border-radius: 50%; background: rgba(6, 8, 24, 0.72); border: 1.5px solid var(--cyan); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5; }
         .btn-play-video svg { width: 24px; height: 24px; fill: var(--cyan); margin-left: 4px; }
         .product-details { padding: 20px; padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
         .product-details .full-desc { font-size: 14px; color: var(--text-sec); margin-bottom: 20px; line-height: 1.5; }
@@ -166,7 +144,7 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
         #modal-video.open { display: flex; }
         #modal-video video { width: 100%; max-height: 100%; object-fit: contain; }
 
-        /* --- SUIVI DE COMMANDE --- */
+        /* --- SUIVI --- */
         .timeline { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; position: relative; padding-left: 20px; }
         .timeline::before { content: ''; position: absolute; left: 6px; top: 10px; bottom: 10px; width: 2px; background: var(--card-border); z-index: 1; }
         .tl-step { position: relative; z-index: 2; display: flex; align-items: flex-start; gap: 15px; opacity: 0.5; transition: all 0.3s; }
@@ -174,59 +152,29 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
         .tl-step.active { opacity: 1; }
         .tl-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--nav-bg); border: 2px solid var(--card-border); margin-top: 4px; position: relative; left: -20px; flex-shrink: 0; transition: all 0.3s; }
         .tl-step.done .tl-dot { background: var(--cyan); border-color: var(--cyan); }
-        .tl-step.active .tl-dot { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 12px var(--cyan); animation: pulse 1.5s infinite; }
+        .tl-step.active .tl-dot { background: var(--cyan); border-color: var(--cyan); animation: pulse 1.5s infinite; }
         .tl-text h4 { font-size: 15px; margin-bottom: 2px; color: var(--text-sec); }
         .tl-step.done .tl-text h4, .tl-step.active .tl-text h4 { color: var(--text-main); }
         .special-status { text-align: center; padding: 20px; font-size: 18px; font-weight: bold; font-family: 'Orbitron', sans-serif; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(79, 227, 255, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(79, 227, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(79, 227, 255, 0); } }
 
-        /* --- NAVIGATION & BOUTON INFO --- */
+        /* --- NAV --- */
         nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 76px; background: var(--nav-bg); border-top: 1px solid var(--nav-border); display: none; justify-content: space-around; padding-bottom: env(safe-area-inset-bottom); z-index: 100; }
         nav.visible { display: flex; }
         .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #8d95ab; font-size: 11px; text-transform: uppercase; font-weight: 500; text-decoration: none; width: 33.33%; position: relative; cursor: pointer; }
         .nav-item.active { color: var(--cyan); }
         .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
         .cart-badge { position: absolute; top: 10px; right: calc(50% - 16px); background: var(--magenta); color: #05061a; font-size: 11px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: none; align-items: center; justify-content: center; }
-        .btn-info { position: fixed; top: 24px; left: 16px; width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--cyan); background: rgba(6, 8, 24, 0.72); color: var(--cyan); font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 800; display: none; align-items: center; justify-content: center; z-index: 50; box-shadow: 0 0 10px rgba(79, 227, 255, 0.2); transition: all 0.2s; }
+        .btn-info { position: fixed; top: 24px; left: 16px; width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--cyan); background: rgba(6, 8, 24, 0.72); color: var(--cyan); font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 800; display: none; align-items: center; justify-content: center; z-index: 50; cursor: pointer; }
         .btn-info.visible { display: flex; }
         .btn-info.active { background: var(--cyan); color: #05061a; }
     </style>
 </head>
 <body>
 
-    <!-- CONFIGURATION -->
-    <script>
-        // ⚠️ CONFIGURATION À MODIFIER
-        const CONFIG = {
-            SUPABASE_URL: 'https://xwctaegjcknthjwyyolq.supabase.co',
-            SUPABASE_KEY: 'sb_publishable_8orKy9SLqBdGRkvbAhfQeA_xVKujcDl',
-            DEMO: true // Passe à false quand les fonctions serveur seront prêtes
-        };
-        
-        // ⚠️ NUMÉROS DE TÉLÉPHONE (Modifie-les ici uniquement)
-        const CONTACTS = {
-            whatsapp: '33622629150', // Sans le + ni espaces
-            telegram: '33622629150', 
-            signal: '+33622629150'
-        };
-
-        // État global
-        let state = {
-            mdp: sessionStorage.getItem('lf_mdp') || '',
-            cleVip: sessionStorage.getItem('lf_vip') || null,
-            products: [],
-            cart: JSON.parse(localStorage.getItem('lf_cart')) || [],
-            currentView: 'accueil',
-            currentProduct: null,
-            currentModalQty: 1,
-            qtyStates: {},
-            trackingInterval: null
-        };
-    </script>
-
     <!-- ÉCRAN DE CONNEXION -->
     <div id="login-screen">
-        <!-- Utilisation du nom exact du fichier uploadé -->
+        <!-- Nom exact de ton fichier logo -->
         <img src="B3345BC8-98CE-49FB-A06B-4B2F005C4132.png" alt="La Formule">
         <div class="input-group visible">
             <input type="password" id="input-mdp" placeholder="Mot de passe">
@@ -274,22 +222,18 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
                 <img src="B3345BC8-98CE-49FB-A06B-4B2F005C4132.png" alt="La Formule" class="logo">
             </header>
             <h2 class="section-title">Notre menu</h2>
-            <div class="product-list" id="product-list">
-                <!-- Rempli par JS -->
-            </div>
+            <div class="product-list" id="product-list"></div>
         </div>
 
         <!-- VUE PANIER -->
         <div id="view-panier" class="view">
             <h2 class="section-title" style="margin-top: 20px; font-size: 22px;">Mon Panier</h2>
-            <div id="cart-container" style="margin-top: 20px;">
-                <!-- Rempli par JS -->
-            </div>
+            <div id="cart-container" style="margin-top: 20px;"></div>
         </div>
 
     </div>
 
-    <!-- BARRE DE NAVIGATION -->
+    <!-- NAVIGATION -->
     <nav id="main-nav">
         <a class="nav-item active" data-target="accueil" onclick="switchView('accueil')">
             <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Accueil
@@ -348,9 +292,32 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
     </div>
 
     <script>
-        // =========================================
-        // LOGIQUE D'ACCÈS
-        // =========================================
+        // --- CONFIGURATION ---
+        const CONFIG = {
+            SUPABASE_URL: 'https://xwctaegjcknthjwyyolq.supabase.co',
+            SUPABASE_KEY: 'sb_publishable_8orKy9SLqBdGRkvbAhfQeA_xVKujcDl',
+            DEMO: true
+        };
+        
+        const CONTACTS = {
+            whatsapp: '33622629150',
+            telegram: '33622629150', 
+            signal: '+33622629150'
+        };
+
+        let state = {
+            mdp: '', // On force la reconnexion
+            cleVip: sessionStorage.getItem('lf_vip') || null,
+            products: [],
+            cart: JSON.parse(localStorage.getItem('lf_cart')) || [],
+            currentView: 'accueil',
+            currentProduct: null,
+            currentModalQty: 1,
+            qtyStates: {},
+            trackingInterval: null
+        };
+
+        // --- LOGIQUE D'ACCÈS ---
         function toggleVipInput() {
             document.getElementById('vip-input-group').classList.toggle('visible');
         }
@@ -365,33 +332,19 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
             
             try {
                 const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/verifier_mdp_general`, {
-                    method: 'POST', headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
+                    method: 'POST', 
+                    headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ p_mdp: pwd })
                 });
+                
+                if (!res.ok) throw new Error("Erreur HTTP");
                 const data = await res.json();
                 
                 if (data === true) {
                     state.mdp = pwd;
-                    sessionStorage.setItem('lf_mdp', pwd);
-                    
                     if (vip) {
-                        if (CONFIG.DEMO && vip === "VIP") {
-                            state.cleVip = vip;
-                            sessionStorage.setItem('lf_vip', vip);
-                        } else {
-                            const resVip = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/verifier_cle_vip`, {
-                                method: 'POST', headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ p_cle: vip })
-                            });
-                            const dataVip = await resVip.json();
-                            if (dataVip === true) {
-                                state.cleVip = vip;
-                                sessionStorage.setItem('lf_vip', vip);
-                            } else {
-                                err.textContent = "Clé VIP invalide.";
-                                return;
-                            }
-                        }
+                        state.cleVip = vip; // Simplifié pour l'instant
+                        sessionStorage.setItem('lf_vip', vip);
                     }
                     initApp();
                 } else {
@@ -413,17 +366,14 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
             switchView('accueil');
         }
 
-        if (state.mdp) { initApp(); }
-
-        // =========================================
-        // NAVIGATION SPA
-        // =========================================
+        // --- NAVIGATION ---
         function switchView(viewId) {
             state.currentView = viewId;
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(`view-${viewId}`).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.querySelector(`.nav-item[data-target="${viewId}"]`).classList.add('active');
+            const targetNav = document.querySelector(`.nav-item[data-target="${viewId}"]`);
+            if(targetNav) targetNav.classList.add('active');
             
             if (viewId === 'accueil' && document.getElementById('tracking-result').innerHTML !== '') {
                 startTrackingPolling();
@@ -432,13 +382,12 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
             }
         }
 
-        // =========================================
-        // PRODUITS & MENU
-        // =========================================
+        // --- PRODUITS ---
         async function fetchProducts() {
             try {
                 const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/lister_produits`, {
-                    method: 'POST', headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
+                    method: 'POST', 
+                    headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ p_mdp: state.mdp, p_cle: state.cleVip })
                 });
                 if (!res.ok) throw new Error("Erreur réseau");
@@ -446,9 +395,10 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
                 if (data && data.length > 0) state.products = data;
                 else throw new Error("Aucun produit");
             } catch (err) {
+                // Fallback de secours
                 state.products = [
-                    { id: "1", nom: "Miel du Yémen 250 g", description: "Pot en verre, récolte 2026", prix: 35.00, prix_vip: null, reserve_vip: false, photo_url: "https://images.unsplash.com/photo-1587049352847-8d4e2a6e5e1b?q=80&w=600&auto=format&fit=crop", video_url: null },
-                    { id: "2", nom: "Miel du Yémen 500 g", description: "Le grand format pour les familles.", prix: 62.00, prix_vip: 55.00, reserve_vip: true, photo_url: "https://images.unsplash.com/photo-1587049352847-8d4e2a6e5e1b?q=80&w=600&auto=format&fit=crop", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                    { id: "1", nom: "Miel du Yémen 250 g", description: "Pot en verre, récolte 2026", prix: 35.00, prix_vip: null, reserve_vip: false, photo_url: "", video_url: null },
+                    { id: "2", nom: "Miel du Yémen 500 g", description: "Le grand format pour les familles.", prix: 62.00, prix_vip: 55.00, reserve_vip: true, photo_url: "", video_url: "" }
                 ];
             }
             renderProducts();
@@ -558,9 +508,7 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
 
         function updateQtyDisplay(id) { document.getElementById(`qty-${id}`).textContent = state.qtyStates[id]; }
 
-        // =========================================
-        // PANIER
-        // =========================================
+        // --- PANIER ---
         function addToCart(id, qty) {
             const existing = state.cart.find(item => item.id === id);
             if (existing) existing.qty += qty;
@@ -649,9 +597,7 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
             container.innerHTML = html;
         }
 
-        // =========================================
-        // COMMANDE & SUIVI
-        // =========================================
+        // --- COMMANDE ---
         async function checkout() {
             if (state.cart.length === 0) return;
             
@@ -664,7 +610,7 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
             let totalCommande = 0;
 
             if (CONFIG.DEMO) {
-                await new Promise(r => setTimeout(r, 800));
+                await new Promise(r => setTimeout(r, 500));
                 numeroCommande = Math.floor(Math.random() * 900) + 100;
                 totalCommande = state.cart.reduce((sum, item) => {
                     const p = state.products.find(x => x.id === item.id);
@@ -672,6 +618,7 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
                     return sum + (price * item.qty);
                 }, 0);
             } else {
+                // Code pour le vrai serveur
                 try {
                     const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/creer_commande`, {
                         method: 'POST', headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
@@ -681,11 +628,9 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
                     if (data && data.numero) {
                         numeroCommande = data.numero;
                         totalCommande = data.total;
-                    } else {
-                        throw new Error("Erreur serveur");
-                    }
+                    } else { throw new Error("Erreur serveur"); }
                 } catch(e) {
-                    alert("Connexion impossible. Réessaie.");
+                    alert("Connexion impossible.");
                     btn.textContent = 'Envoyer ma commande';
                     btn.disabled = false;
                     return;
@@ -737,9 +682,7 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
         function copyToClipboard(text) {
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
-            } else {
-                fallbackCopy(text);
-            }
+            } else { fallbackCopy(text); }
         }
 
         function fallbackCopy(text) {
@@ -842,9 +785,7 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
             if (state.trackingInterval) clearInterval(state.trackingInterval);
         }
 
-        // =========================================
-        // MODALES & VIDÉO
-        // =========================================
+        // --- MODALES ---
         function openInfos() {
             document.getElementById('modal-info').classList.add('open');
             document.getElementById('overlay').classList.add('open');
@@ -858,20 +799,20 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
             }
         }
 
-        function open0ProductModal(p) {
+        function openProductModal(p) {
             state.currentProduct = p;
-            state.currentModal,Qty = 1;
+            state.currentModalQty = 1;
             
-            const isVip = state.0cleVip && p.prix_vip;
-            const displayPrice =, isVip ? p.prix_vip : p.prix;
+            const isVip = state.cleVip && p.prix_vip;
+            const displayPrice = isVip ? p.prix_vip : p.prix;
 
-0            document.getElementById('product-title').textContent = p.nom,;
+            document.getElementById('product-title').textContent = p.nom;
             document.getElementById('product-price').textContent = `${displayPrice.toFixed(2).replace('.', ',')} €`;
             document.getElementById('product-desc').textContent = p.description || '';
             document.getElementById('product-qty').textContent = '1';
 
             const imgWrapper = document.getElementById('product-img-wrapper');
-            imgWrapper.innerHTML = '<button class="btn-close" style="position:absolute; top:16px; right:16px; background:rgba(0.5); color:white; border-radius:50%; z-index:10;" onclick="closeProduct()">×</button>';
+            imgWrapper.innerHTML = '<button class="btn-close" style="position:absolute; top:16px; right:16px; background:rgba(0,0,0,0.5); color:white; border-radius:50%; z-index:10;" onclick="closeProduct()">×</button>';
 
             if (p.photo_url) {
                 const img = document.createElement('img');
@@ -925,4 +866,3 @@ Voici le code complet (mon message précédent avait été coupé). Remplace tou
     </script>
 </body>
 </html>
-```
