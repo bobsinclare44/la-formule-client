@@ -47,10 +47,8 @@
             padding: 20px; text-align: center;
         }
         #login-screen img { width: 230px; margin-bottom: 30px; }
-        .input-group { width: 100%; max-width: 300px; margin-bottom: 15px; display: none; }
-        .input-group.visible { display: block; }
         #login-screen input {
-            width: 100%; padding: 15px; background: var(--card-bg); border: 1px solid var(--card-border);
+            width: 100%; max-width: 300px; padding: 15px; margin-bottom: 15px; background: var(--card-bg); border: 1px solid var(--card-border);
             color: white; border-radius: 8px; text-align: center; font-size: 16px; -webkit-appearance: none;
         }
         .btn-main {
@@ -59,7 +57,6 @@
             box-shadow: 0 0 18px rgba(120, 120, 255, 0.45); -webkit-appearance: none; cursor: pointer;
         }
         #login-error { color: var(--red); margin-top: 15px; font-size: 14px; min-height: 20px; }
-        .link-vip { color: var(--cyan); font-size: 13px; margin-top: 20px; text-decoration: underline; cursor: pointer; }
 
         /* --- STRUCTURE --- */
         .app-content { flex: 1; position: relative; overflow: hidden; display: none; }
@@ -91,7 +88,13 @@
         .card-content { padding: 14px; display: flex; flex-direction: column; }
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
         .card-title { font-size: 17px; font-weight: 600; font-family: 'Exo 2', sans-serif; }
+        
+        /* Nouveaux styles de prix */
+        .price-container { display: flex; flex-direction: column; align-items: flex-end; }
         .price { font-size: 17px; color: var(--cyan); font-weight: 600; }
+        .price-vip { font-size: 14px; color: var(--magenta); font-weight: 600; margin-top: 2px; }
+        .price-vip-label { font-size: 10px; color: var(--magenta-light); text-transform: uppercase; }
+
         .card-desc { font-size: 13px; color: var(--text-sec); margin-bottom: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .card-actions { display: flex; gap: 10px; }
         .qty-selector { display: flex; align-items: center; border: 1px solid rgba(150, 170, 255, 0.4); border-radius: 12px; height: 44px; overflow: hidden; }
@@ -99,6 +102,14 @@
         .qty-val { width: 32px; text-align: center; font-weight: 600; }
         .btn-add { flex: 1; height: 44px; border: none; border-radius: 12px; background: linear-gradient(90deg, #25d7ff, #c04dff); color: #05061a; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform 0.1s; }
         .btn-add:active { transform: scale(0.96); }
+
+        /* --- VIP --- */
+        .vip-hero { text-align: center; padding: 30px 20px; }
+        .vip-hero h2 { color: var(--magenta); text-shadow: 0 0 10px var(--magenta); font-size: 24px; margin-bottom: 10px; }
+        .vip-hero p { color: var(--text-sec); font-size: 14px; margin-bottom: 20px; }
+        .vip-box { background: rgba(255, 43, 214, 0.1); border: 1px solid var(--magenta); padding: 20px; border-radius: 10px; text-align: center; margin: 0 16px 20px 16px; }
+        .vip-box input { width: 100%; padding: 12px; margin: 10px 0; background: var(--bg); border: 1px solid var(--magenta); color: white; border-radius: 5px; text-align: center; font-size: 16px; }
+        .btn-vip { background: var(--magenta); color: white; border: none; padding: 12px; border-radius: 5px; width: 100%; font-weight: bold; box-shadow: 0 0 10px var(--magenta); cursor: pointer; }
 
         /* --- PANIER --- */
         .cart-list { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
@@ -161,7 +172,7 @@
         /* --- NAV --- */
         nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 76px; background: var(--nav-bg); border-top: 1px solid var(--nav-border); display: none; justify-content: space-around; padding-bottom: env(safe-area-inset-bottom); z-index: 100; }
         nav.visible { display: flex; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #8d95ab; font-size: 11px; text-transform: uppercase; font-weight: 500; text-decoration: none; width: 33.33%; position: relative; cursor: pointer; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #8d95ab; font-size: 11px; text-transform: uppercase; font-weight: 500; text-decoration: none; width: 25%; position: relative; cursor: pointer; }
         .nav-item.active { color: var(--cyan); }
         .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
         .cart-badge { position: absolute; top: 10px; right: calc(50% - 16px); background: var(--magenta); color: #05061a; font-size: 11px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: none; align-items: center; justify-content: center; }
@@ -175,15 +186,9 @@
     <!-- ÉCRAN DE CONNEXION -->
     <div id="login-screen">
         <img src="B3345BC8-98CE-49FB-A06B-4B2F005C4132.png" alt="La Formule">
-        <div class="input-group visible">
-            <input type="password" id="input-mdp" placeholder="Mot de passe">
-        </div>
-        <div class="input-group" id="vip-input-group">
-            <input type="text" id="input-vip" placeholder="Clé VIP">
-        </div>
+        <input type="password" id="input-mdp" placeholder="Mot de passe général">
         <button class="btn-main" onclick="login()">ENTRER</button>
         <p id="login-error"></p>
-        <p class="link-vip" onclick="toggleVipInput()">J'ai une clé VIP</p>
     </div>
 
     <!-- BOUTON INFO -->
@@ -207,7 +212,7 @@
                 <div class="card-suivi">
                     <h3>Suivre ma commande</h3>
                     <div class="suivi-input-row">
-                        <input type="number" id="tracking-numero" placeholder="N° de commande">
+                        <input type="number" id="tracking-numero" placeholder="N° de ticket">
                         <button onclick="trackOrder()">Suivre</button>
                     </div>
                     <div id="tracking-result" style="margin-top: 15px;"></div>
@@ -224,6 +229,39 @@
             <div class="product-list" id="product-list"></div>
         </div>
 
+        <!-- VUE VIP -->
+        <div id="view-vip" class="view">
+            <div class="vip-hero">
+                <h2>Devenir VIP</h2>
+                <p>Accédez à des prix exclusifs et à des produits réservés.</p>
+            </div>
+            
+            <div id="vip-active-state" style="display: none; text-align: center; padding: 20px;">
+                <div style="background: rgba(255,43,214,0.1); border: 1px solid var(--magenta); border-radius: 18px; padding: 20px;">
+                    <p style="color: var(--magenta); font-weight: bold; font-size: 18px; margin-bottom: 10px;">Statut : Membre VIP Actif 👑</p>
+                    <p style="font-size: 14px; color: var(--text-sec);">Les prix VIP sont appliqués automatiquement sur tout le menu.</p>
+                </div>
+            </div>
+
+            <div id="vip-login-state">
+                <div class="vip-box">
+                    <p style="font-size:14px; margin-bottom:10px; color:var(--text-sec);">Saisissez votre clé d'accès VIP :</p>
+                    <input type="text" id="cle-vip-input" placeholder="VIP-XXXXXX">
+                    <button class="btn-vip" onclick="verifierVip()">Activer mon compte</button>
+                    <p id="vip-error" class="error" style="color:var(--red); margin-top:10px; font-size:12px;"></p>
+                </div>
+                
+                <div style="padding: 0 20px;">
+                    <h3 style="font-size: 16px; margin-bottom: 10px;">Vos avantages :</h3>
+                    <ul style="color: var(--text-sec); font-size: 14px; margin-left: 20px; line-height: 1.6;">
+                        <li>Prix réduits sur les produits éligibles.</li>
+                        <li>Accès aux éditions limitées (réservées VIP).</li>
+                        <li>Conservation de l'historique de vos commandes.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
         <!-- VUE PANIER -->
         <div id="view-panier" class="view">
             <h2 class="section-title" style="margin-top: 20px; font-size: 22px;">Mon Panier</h2>
@@ -232,13 +270,16 @@
 
     </div>
 
-    <!-- NAVIGATION -->
+    <!-- NAVIGATION (4 onglets) -->
     <nav id="main-nav">
         <a class="nav-item active" data-target="accueil" onclick="switchView('accueil')">
             <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Accueil
         </a>
         <a class="nav-item" data-target="menu" onclick="switchView('menu')">
             <svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11z"/><circle cx="17.5" cy="17.5" r="4.5"/><path d="M2 13h10v9H2z"/></svg> Menu
+        </a>
+        <a class="nav-item" data-target="vip" onclick="switchView('vip')">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> VIP
         </a>
         <a class="nav-item" data-target="panier" onclick="switchView('panier')">
             <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg> Panier
@@ -271,7 +312,10 @@
         </div>
         <div class="product-details">
             <h2 class="card-title" id="product-title" style="font-size: 22px; margin-bottom: 4px;">Nom</h2>
-            <div class="price" id="product-price" style="font-size: 20px;">0.00 €</div>
+            <div id="product-price-container" style="margin-bottom: 10px;">
+                <span class="price" id="product-price" style="font-size: 20px;">0.00 €</span>
+                <span class="price-vip" id="product-price-vip" style="display:none; font-size: 16px; margin-left: 10px;">0.00 € VIP</span>
+            </div>
             <p class="full-desc" id="product-desc">Description complète</p>
             <div class="card-actions" style="margin-top: 20px;">
                 <div class="qty-selector">
@@ -294,8 +338,7 @@
         // --- CONFIGURATION ---
         const CONFIG = {
             SUPABASE_URL: 'https://xwctaegjcknthjwyyolq.supabase.co',
-            SUPABASE_KEY: 'sb_publishable_8orKy9SLqBdGRkvbAhfQeA_xVKujcDl',
-            DEMO: false
+            SUPABASE_KEY: 'sb_publishable_8orKy9SLqBdGRkvbAhfQeA_xVKujcDl'
         };
         
         const CONTACTS = {
@@ -317,13 +360,8 @@
         };
 
         // --- LOGIQUE D'ACCÈS ---
-        function toggleVipInput() {
-            document.getElementById('vip-input-group').classList.toggle('visible');
-        }
-
         async function login() {
             const pwd = document.getElementById('input-mdp').value;
-            const vip = document.getElementById('input-vip').value.trim();
             const err = document.getElementById('login-error');
             
             if (!pwd) { err.textContent = "Mot de passe requis."; return; }
@@ -341,10 +379,6 @@
                 
                 if (data === true) {
                     state.mdp = pwd;
-                    if (vip) {
-                        state.cleVip = vip; 
-                        sessionStorage.setItem('lf_vip', vip);
-                    }
                     initApp();
                 } else {
                     err.textContent = 'Accès refusé.';
@@ -360,6 +394,7 @@
             document.getElementById('main-nav').classList.add('visible');
             document.getElementById('btn-info').classList.add('visible');
             
+            updateVipUi();
             fetchProducts();
             updateCartUI();
             switchView('accueil');
@@ -381,6 +416,44 @@
             }
         }
 
+        // --- VIP ---
+        function updateVipUi() {
+            if (state.cleVip) {
+                document.getElementById('vip-login-state').style.display = 'none';
+                document.getElementById('vip-active-state').style.display = 'block';
+            } else {
+                document.getElementById('vip-login-state').style.display = 'block';
+                document.getElementById('vip-active-state').style.display = 'none';
+            }
+        }
+
+        async function verifierVip() {
+            const cle = document.getElementById('cle-vip-input').value.trim();
+            if (!cle) return;
+            const err = document.getElementById('vip-error');
+            err.textContent = 'Vérification...';
+            
+            try {
+                const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/verifier_cle_vip`, {
+                    method: 'POST', headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_cle: cle })
+                });
+                const data = await res.json();
+                
+                if (data === true) {
+                    state.cleVip = cle;
+                    sessionStorage.setItem('lf_vip', cle);
+                    updateVipUi();
+                    fetchProducts(); // Recharger pour avoir les produits réservés
+                    updateCartUI(); // Mettre à jour les prix du panier
+                } else {
+                    err.textContent = 'Clé invalide ou expirée.';
+                }
+            } catch(e) {
+                err.textContent = 'Erreur de connexion.';
+            }
+        }
+
         // --- PRODUITS ---
         async function fetchProducts() {
             try {
@@ -394,9 +467,8 @@
                 if (data && data.length > 0) state.products = data;
                 else throw new Error("Aucun produit");
             } catch (err) {
-                // Fallback de secours (si la BDD est vide ou Supabase inaccessible)
                 state.products = [
-                    { id: "1", nom: "Miel du Yémen 250 g", description: "Pot en verre, récolte 2026", prix: 35.00, prix_vip: null, reserve_vip: false, photo_url: "", video_url: null },
+                    { id: "1", nom: "Miel du Yémen 250 g", description: "Pot en verre, récolte 2026", prix: 35.00, prix_vip: 30.00, reserve_vip: false, photo_url: "", video_url: null },
                     { id: "2", nom: "Miel du Yémen 500 g", description: "Le grand format pour les familles.", prix: 62.00, prix_vip: 55.00, reserve_vip: true, photo_url: "", video_url: "" }
                 ];
             }
@@ -409,8 +481,8 @@
 
             state.products.forEach(p => {
                 state.qtyStates[p.id] = 1; 
-                const isVip = state.cleVip && p.prix_vip;
-                const displayPrice = isVip ? p.prix_vip : p.prix;
+                const hasVipPrice = p.prix_vip !== null;
+                const isVipActive = state.cleVip !== null;
 
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -437,26 +509,46 @@
                 } else {
                     const ph = document.createElement('div');
                     ph.className = 'img-placeholder';
-                    ph.innerHTML = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Photo du produit</span>`;
+                    ph.innerHTML = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="current-contentColor" stroke-width="2"><rect x="';
+
+3" y="3" width="18               " height="18" rx="2" ry=" const2"/><circle cx="8.5" cy header="8.5" r="1.5"/ =><polyline points="21 15 16 10 5 21"/></svg><span>Photo du produit</span>`;
                     imgWrapper.appendChild(ph);
                 }
 
                 const content = document.createElement('div');
-                content.className = 'card-content';
-
-                const header = document.createElement('div');
+                content.className = 'card document.createElement('div');
                 header.className = 'card-header';
                 
                 const title = document.createElement('h3');
                 title.className = 'card-title';
                 title.textContent = p.nom; 
                 
-                const price = document.createElement('span');
-                price.className = 'price';
-                price.textContent = `${displayPrice.toFixed(2).replace('.', ',')} €`;
+                // Affichage des deux prix
+                const priceContainer = document.createElement('div');
+                priceContainer.className = 'price-container';
+                
+                const priceNormal = document.createElement('span');
+                priceNormal.className = 'price';
+                priceNormal.textContent = `${p.prix.toFixed(2).replace('.', ',')} €`;
+                if (isVipActive && hasVipPrice) {
+                    priceNormal.style.textDecoration = 'line-through';
+                    priceNormal.style.opacity = '0.5';
+                    priceNormal.style.fontSize = '14px';
+                }
+                priceContainer.appendChild(priceNormal);
+
+                if (hasVipPrice) {
+                    const priceVip = document.createElement('span');
+                    priceVip.className = 'price-vip';
+                    priceVip.innerHTML = `<span class="price-vip-label">Prix VIP</span> ${p.prix_vip.toFixed(2).replace('.', ',')} €`;
+                    if (!isVipActive) {
+                        priceVip.style.opacity = '0.7'; // Visible mais un peu estompé si pas VIP
+                    }
+                    priceContainer.appendChild(priceVip);
+                }
 
                 header.appendChild(title);
-                header.appendChild(price);
+                header.appendChild(priceContainer);
 
                 const desc = document.createElement('p');
                 desc.className = 'card-desc';
@@ -559,8 +651,9 @@
                 const p = state.products.find(x => x.id === item.id);
                 if (!p) return;
                 
-                const isVip = state.cleVip && p.prix_vip;
-                const price = isVip ? p.prix_vip : p.prix;
+                // Si VIP et que le prix VIP existe, on applique. Sinon prix normal.
+                const isVipActive = state.cleVip && p.prix_vip !== null;
+                const price = isVipActive ? p.prix_vip : p.prix;
                 const lineTotal = price * item.qty;
                 totalPrice += lineTotal;
 
@@ -568,7 +661,7 @@
                     <div class="cart-item">
                         <img src="${p.photo_url || ''}" alt="${p.nom}" onerror="this.style.display='none'">
                         <div class="cart-info">
-                            <h4>${p.nom}</h4>
+                            <h4>${p.nom} ${isVipActive ? '👑' : ''}</h4>
                             <div class="price">${price.toFixed(2).replace('.', ',')} €</div>
                         </div>
                         <div class="cart-actions">
@@ -627,7 +720,8 @@
                     let msg = `Bonjour, ma commande n°${numeroCommande} :\n`;
                     state.cart.forEach(item => {
                         const p = state.products.find(x => x.id === item.id);
-                        const price = (state.cleVip && p.prix_vip) ? p.prix_vip : p.prix;
+                        const isVipActive = state.cleVip && p.prix_vip !== null;
+                        const price = isVipActive ? p.prix_vip : p.prix;
                         msg += `• ${item.qty} × ${p.nom} — ${(price * item.qty).toFixed(2).replace('.', ',')} €\n`;
                     });
                     msg += `Total : ${totalCommande.toFixed(2).replace('.', ',')} €\n\n`;
@@ -672,10 +766,11 @@
             }
         }
 
-        function copyToClipboard(text) {
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
-            } else { fallbackCopy(text); }
+        function data copyToClipboard(text) {
+            if (.statnavigator.clipboardut) {
+                navigator.clipboard;
+.writeText(text).catch(() => fallback           Copy(text));
+            } else { fallbackCopy const(text); }
         }
 
         function fallbackCopy(text) {
@@ -722,8 +817,7 @@
         }
 
         function renderTimeline(data, container) {
-            const statut = data.statut;
-            const date = new Date(data.updated_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+            const statut = date = new Date(data.updated_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
             
             let html = '';
 
@@ -789,11 +883,24 @@
             state.currentProduct = p;
             state.currentModalQty = 1;
             
-            const isVip = state.cleVip && p.prix_vip;
-            const displayPrice = isVip ? p.prix_vip : p.prix;
+            const hasVipPrice = p.prix_vip !== null;
+            const isVipActive = state.cleVip !== null;
 
             document.getElementById('product-title').textContent = p.nom;
-            document.getElementById('product-price').textContent = `${displayPrice.toFixed(2).replace('.', ',')} €`;
+            document.getElementById('product-price').textContent = `${p.prix.toFixed(2).replace('.', ',')} €`;
+            
+            const priceVipEl = document.getElementById('product-price-vip');
+            if (hasVipPrice) {
+                priceVipEl.innerHTML = `<span class="price-vip-label">Prix VIP</span> ${p.prix_vip.toFixed(2).replace('.', ',')} €`;
+                priceVipEl.style.display = 'inline-block';
+                if (isVipActive) {
+                    document.getElementById('product-price').style.textDecoration = 'line-through';
+                    document.getElementById('product-price').style.opacity = '0.5';
+                }
+            } else {
+                priceVipEl.style.display = 'none';
+            }
+
             document.getElementById('product-desc').textContent = p.description || '';
             document.getElementById('product-qty').textContent = '1';
 
