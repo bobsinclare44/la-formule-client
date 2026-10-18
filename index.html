@@ -494,8 +494,7 @@
             
             try {
                 const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/verifier_cle_vip`, {
-                    method: 'POST', headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': '');
-application/json' },
+                    method: 'POST', headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ p_cle: cle })
                 });
                 const data = await res.json();
@@ -635,7 +634,8 @@ application/json' },
                 const qtyDiv = document.createElement('div');
                 qtyDiv.className = 'qty-selector';
                 
-                const btnMinus = document.createElement('button                btnMinus.className = 'qty-btn';
+                const btnMinus = document.createElement('button');
+                btnMinus.className = 'qty-btn';
                 btnMinus.textContent = '−';
                 btnMinus.onclick = () => { if(state.qtyStates[p.id] > 1) { state.qtyStates[p.id]--; updateQtyDisplay(p.id); } };
 
@@ -714,13 +714,12 @@ application/json' },
 
             const container = document.getElementById('cart-container');
             if (state.cart.length === 0) {
-                container.innerHTML = `<div class="empty-cart"><p style="margin-bottom:20px;">Ton panier est vide.</p><button class="btn-main" onclick="switch;">
-View('menu')">Voir                            le menu</button></div>`;
-                return <;
+                container.innerHTML = `<div class="empty-cart"><p style="margin-bottom:20px;">Ton panier est vide.</p><button class="btn-main" onclick="switchView('menu')">Voir le menu</button></div>`;
+                return;
             }
 
-            let htmlh = '<div class="cart-list">';
-           2 let totalPrice = 0 style=";
+            let html = '<div class="cart-list">';
+            let totalPrice = 0;
 
             state.cart.forEach(item => {
                 const p = state.products.find(x => x.id === item.id);
@@ -813,13 +812,15 @@ View('menu')">Voir                            le menu</button></div>`;
 
                     const container = document.getElementById('cart-container');
                     container.innerHTML = `
-                        <div style="text-align:center; padding: 30px 20pxcolor:var(--cyan); font-size: 28px; margin-bottom: 10px;">Commande n° ${numeroCommande}</h2>
+                        <div style="text-align:center; padding: 30px 20px;">
+                            <h2 style="color:var(--cyan); font-size: 28px; margin-bottom: 10px;">Commande n° ${numeroCommande}</h2>
                             <p style="font-size: 18px; margin-bottom: 30px;">Total : ${totalCommande.toFixed(2).replace('.', ',')} €</p>
                             <p style="color:var(--text-sec); margin-bottom: 20px;">Envoie le message pour finaliser ta commande.</p>
                             
                             <div style="display:flex; flex-direction:column; gap:10px; max-width:300px; margin:0 auto;">
                                 <a href="https://wa.me/${CONTACTS.whatsapp}?text=${encodeURIComponent(msg)}" class="btn-main" style="text-decoration:none; display:block; line-height:1.2; background:#25D366; color:black;">WhatsApp</a>
-                                <a href="https://t.me/${CONTACTS.telegram}?text=${encodeURIComponent(msg)}" class="btn-main" style="text-decoration:none; display:block; line-height:1.2; background:#0088cc; color:white;">Telegram</a>
+                                <!-- Lien Telegram corrigé pour le partage -->
+                                <a href="https://t.me/share/url?url=&text=${encodeURIComponent(msg)}" class="btn-main" style="text-decoration:none; display:block; line-height:1.2; background:#0088cc; color:white;">Telegram</a>
                                 <a href="https://signal.me/#p/${CONTACTS.signal}" class="btn-main" style="text-decoration:none; display:block; line-height:1.2; background:#3a76f0; color:white;" target="_blank">Signal</a>
                                 <p style="font-size:12px; color:#888; margin-top:10px;">Message copié. Colle-le dans Signal.</p>
                             </div>
