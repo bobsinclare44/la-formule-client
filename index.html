@@ -130,20 +130,33 @@
         /* --- MODALES --- */
         .overlay { position: fixed; inset: 0; background: rgba(3, 4, 14, 0.72); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
         .overlay.open { opacity: 1; pointer-events: auto; }
-        .modal-info { position: fixed; top: 130px; left: 16px; right: 16px; background: rgba(10, 12, 36, 0.96); border: 1px solid var(--cyan); border-radius: 20px; padding: 18px; z-index: 210; transform: scale(0.96); opacity: 0; pointer-events: none; transition: all 0.18s ease-out; }
-        .modal-info.open { transform: scale(1); opacity: 1; pointer-events: auto; }
+        
+        .modal-info, .modal-legal { 
+            position: fixed; top: 10%; left: 16px; right: 16px; background: rgba(10, 12, 36, 0.98); border: 1px solid var(--cyan); border-radius: 20px; padding: 18px; z-index: 210; 
+            transform: scale(0.96); opacity: 0; pointer-events: none; transition: all 0.18s ease-out;
+            max-height: 80vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+        }
+        .modal-legal { z-index: 220; border-color: var(--magenta); }
+        .modal-info.open, .modal-legal.open { transform: scale(1); opacity: 1; pointer-events: auto; }
+        
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .modal-title { font-size: 16px; font-weight: 600; }
         .btn-close { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; color: var(--text-sec); font-size: 24px; cursor: pointer; margin: -10px -10px 0 0; }
+        
         .info-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(130, 150, 255, 0.22); }
         .info-row:last-child { border-bottom: none; }
         .info-icon { color: var(--cyan); width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         .info-text h4 { font-size: 11px; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
         .info-text p { font-size: 15px; display: flex; align-items: center; gap: 6px; }
+        
         .steps-title { font-size: 11px; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.05em; margin: 16px 0 10px 0; }
         .step { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 14px; }
         .step-num { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--magenta); color: var(--magenta-light); font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        
+
+        .legal-content h4 { color: var(--cyan); font-size: 14px; margin: 15px 0 5px 0; }
+        .legal-content p, .legal-content li { font-size: 12px; color: var(--text-sec); line-height: 1.5; margin-bottom: 5px; }
+        .legal-content ul { margin-left: 15px; margin-bottom: 10px; }
+
         .modal-product { position: fixed; bottom: 0; left: 0; width: 100%; height: 85%; background: rgba(10, 12, 36, 0.98); border-top: 1px solid var(--card-border); border-radius: 24px 24px 0 0; z-index: 220; transform: translateY(100%); transition: transform 0.25s ease-out; display: flex; flex-direction: column; overflow-y: auto; }
         .modal-product.open { transform: translateY(0); }
         .modal-product .card-img-wrapper { border-radius: 24px 24px 0 0; }
@@ -303,10 +316,45 @@
         <div class="info-row"><div class="info-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div class="info-text"><h4>Horaires</h4><p><span class="status-dot"></span> Ouvert 12h–00h</p></div></div>
         <div class="info-row"><div class="info-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="info-text"><h4>Livraison</h4><p>44300 et alentours</p></div></div>
         <div class="info-row"><div class="info-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg></div><div class="info-text"><h4>Paiement</h4><p>À la livraison</p></div></div>
+        
         <div class="steps-title">Comment commander</div>
         <div class="step"><div class="step-num">1</div> Choisis tes produits</div>
         <div class="step"><div class="step-num">2</div> Valide ton panier</div>
         <div class="step"><div class="step-num">3</div> Envoie ta commande par message</div>
+
+        <!-- Lien vers les mentions légales -->
+        <div style="margin-top: 20px; text-align: center;">
+            <button onclick="openLegal()" style="background:transparent; border:none; color:var(--text-sec); text-decoration:underline; font-size:12px; cursor:pointer;">Mentions Légales & RGPD</button>
+        </div>
+    </div>
+
+    <!-- Mentions Légales -->
+    <div class="modal-legal" id="modal-legal">
+        <div class="modal-header">
+            <h3 class="modal-title">Mentions Légales & RGPD</h3>
+            <button class="btn-close" onclick="closeLegal()">×</button>
+        </div>
+        <div class="legal-content">
+            <h4>1. Éditeur du site</h4>
+            <p>Ce site est édité par : <strong>[Ton Nom / Prénom ou Nom d'entreprise]</strong><br>
+            Statut : [Micro-entrepreneur / Particulier]<br>
+            Contact : +33 6 22 62 91 50</p>
+
+            <h4>2. Hébergement</h4>
+            <p>Le site est hébergé par GitHub Pages (GitHub Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA) et la base de données par Supabase (Supabase Inc., 970 Toa Payoh North, Singapour).</p>
+
+            <h4>3. Protection des données (RGPD)</h4>
+            <p>Nous accordons une importance capitale à la protection de votre vie privée. <strong>Ce site ne collecte, ne stocke et ne traite aucune donnée personnelle</strong> (nom, adresse, numéro de téléphone).</p>
+            <ul>
+                <li><strong>Panier :</strong> Vos choix de produits sont stockés uniquement sur votre téléphone (localStorage) et ne sont jamais envoyés à nos serveurs.</li>
+                <li><strong>Commandes :</strong> Lors de la validation, un numéro de ticket anonyme est créé. Si vous n'utilisez pas de clé VIP, ce ticket est automatiquement supprimé au bout d'une heure.</li>
+                <li><strong>Livraison :</strong> Les informations nécessaires à la livraison (adresse, téléphone) sont échangées exclusivement via votre application de messagerie (WhatsApp, Telegram ou Signal). Elles ne transitent jamais par ce site.</li>
+            </ul>
+            <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et d'opposition sur vos données. Étant donné qu'aucune donnée n'est conservée, ces droits s'appliquent directement via la suppression de vos messages sur votre application de messagerie.</p>
+
+            <h4>4. Cookies et traceurs</h4>
+            <p>Ce site n'utilise aucun cookie de traçage publicitaire ou analytique. Seul le stockage local (localStorage) est utilisé pour retenir votre panier et votre statut VIP afin de faciliter votre navigation.</p>
+        </div>
     </div>
 
     <!-- Fiche Produit -->
@@ -446,7 +494,8 @@
             
             try {
                 const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/verifier_cle_vip`, {
-                    method: 'POST', headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': 'application/json' },
+                    method: 'POST', headers: { 'apikey': CONFIG.SUPABASE_KEY, 'Content-Type': '');
+application/json' },
                     body: JSON.stringify({ p_cle: cle })
                 });
                 const data = await res.json();
@@ -586,8 +635,7 @@
                 const qtyDiv = document.createElement('div');
                 qtyDiv.className = 'qty-selector';
                 
-                const btnMinus = document.createElement('button');
-                btnMinus.className = 'qty-btn';
+                const btnMinus = document.createElement('button                btnMinus.className = 'qty-btn';
                 btnMinus.textContent = '−';
                 btnMinus.onclick = () => { if(state.qtyStates[p.id] > 1) { state.qtyStates[p.id]--; updateQtyDisplay(p.id); } };
 
@@ -666,12 +714,13 @@
 
             const container = document.getElementById('cart-container');
             if (state.cart.length === 0) {
-                container.innerHTML = `<div class="empty-cart"><p style="margin-bottom:20px;">Ton panier est vide.</p><button class="btn-main" onclick="switchView('menu')">Voir le menu</button></div>`;
-                return;
+                container.innerHTML = `<div class="empty-cart"><p style="margin-bottom:20px;">Ton panier est vide.</p><button class="btn-main" onclick="switch;">
+View('menu')">Voir                            le menu</button></div>`;
+                return <;
             }
 
-            let html = '<div class="cart-list">';
-            let totalPrice = 0;
+            let htmlh = '<div class="cart-list">';
+           2 let totalPrice = 0 style=";
 
             state.cart.forEach(item => {
                 const p = state.products.find(x => x.id === item.id);
@@ -764,8 +813,7 @@
 
                     const container = document.getElementById('cart-container');
                     container.innerHTML = `
-                        <div style="text-align:center; padding: 30px 20px;">
-                            <h2 style="color:var(--cyan); font-size: 28px; margin-bottom: 10px;">Commande n° ${numeroCommande}</h2>
+                        <div style="text-align:center; padding: 30px 20pxcolor:var(--cyan); font-size: 28px; margin-bottom: 10px;">Commande n° ${numeroCommande}</h2>
                             <p style="font-size: 18px; margin-bottom: 30px;">Total : ${totalCommande.toFixed(2).replace('.', ',')} €</p>
                             <p style="color:var(--text-sec); margin-bottom: 20px;">Envoie le message pour finaliser ta commande.</p>
                             
@@ -905,7 +953,19 @@
         function closeInfos() {
             document.getElementById('modal-info').classList.remove('open');
             document.getElementById('btn-info').classList.remove('active');
-            if (!document.getElementById('modal-product').classList.contains('open')) {
+            if (!document.getElementById('modal-product').classList.contains('open') && !document.getElementById('modal-legal').classList.contains('open')) {
+                document.getElementById('overlay').classList.remove('open');
+            }
+        }
+
+        function openLegal() {
+            closeInfos();
+            document.getElementById('modal-legal').classList.add('open');
+            document.getElementById('overlay').classList.add('open');
+        }
+        function closeLegal() {
+            document.getElementById('modal-legal').classList.remove('open');
+            if (!document.getElementById('modal-product').classList.contains('open') && !document.getElementById('modal-info').classList.contains('open')) {
                 document.getElementById('overlay').classList.remove('open');
             }
         }
@@ -961,7 +1021,7 @@
 
         function closeProduct() {
             document.getElementById('modal-product').classList.remove('open');
-            if (!document.getElementById('modal-info').classList.contains('open')) {
+            if (!document.getElementById('modal-info').classList.contains('open') && !document.getElementById('modal-legal').classList.contains('open')) {
                 document.getElementById('overlay').classList.remove('open');
             }
         }
@@ -989,6 +1049,7 @@
         function closeAllModals() {
             closeInfos();
             closeProduct();
+            closeLegal();
         }
     </script>
 </body>
