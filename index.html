@@ -559,7 +559,6 @@
                 priceNormal.className = 'price';
                 priceNormal.textContent = `${prixNormalNum.toFixed(2).replace('.', ',')} €`;
                 
-                // Si l'utilisateur est VIP, on barre le prix normal
                 if (isVipActive && hasVipPrice) {
                     priceNormal.style.textDecoration = 'line-through';
                     priceNormal.style.opacity = '0.5';
@@ -567,12 +566,10 @@
                 }
                 priceContainer.appendChild(priceNormal);
 
-                // Le prix VIP s'affiche TOUJOURS s'il existe, que l'on soit VIP ou non
                 if (hasVipPrice) {
                     const priceVip = document.createElement('span');
                     priceVip.className = 'price-vip';
                     priceVip.innerHTML = `<span class="price-vip-label">Prix VIP</span> ${prixVipNum.toFixed(2).replace('.', ',')} €`;
-                    // On enlève l'opacité réduite pour que les non-VIP voient bien le prix
                     priceContainer.appendChild(priceVip);
                 }
 
